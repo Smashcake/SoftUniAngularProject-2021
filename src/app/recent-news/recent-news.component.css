@@ -1,0 +1,11 @@
+.news-title{
+    text-decoration: none;
+}
+
+.news-cover{
+    border:1px solid black;
+}
+
+.news-content{
+    display:flex;
+}
