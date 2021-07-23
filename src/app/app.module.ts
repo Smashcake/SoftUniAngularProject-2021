@@ -8,13 +8,15 @@ import { FooterComponent } from './core/footer/footer.component';
 import { HeaderComponent } from './core/header/header.component';
 import { NewsService } from './news.service';
 import { RecentNewsComponent } from './recent-news/recent-news.component';
+import { NewsDetailComponent } from './news-detail/news-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
     HeaderComponent,
-    RecentNewsComponent
+    RecentNewsComponent,
+    NewsDetailComponent
   ],
   imports: [
     BrowserModule,

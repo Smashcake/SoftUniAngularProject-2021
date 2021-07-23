@@ -1,7 +1,7 @@
 <article class="recent-news">
     <div class="recent-news-list" *ngFor="let n of news">
         <div class="news-name">
-            <a href="" class="news-title">
+            <a [routerLink]="['/news-detail', n?.id]" class="news-title">
                 <h3>
                     {{n.name}}
                 </h3>
@@ -27,4 +27,5 @@
     <div *ngIf="test">
         <p>{{test.news.test}}</p>
     </div>
+    <div *ngIf="!news">Loading recent news,please wait.</div>
 </article>
