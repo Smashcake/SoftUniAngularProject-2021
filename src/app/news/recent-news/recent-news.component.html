@@ -1,0 +1,31 @@
+<article class="recent-news">
+    <div class="recent-news-list" *ngFor="let n of news">
+        <div class="news-name">
+            <a [routerLink]="['/news-detail', n?.id]" class="news-title">
+                <h3>
+                    {{n.name}}
+                </h3>
+            </a>
+        </div>
+        <div class="news-content">
+            <div class="news-cover-wrapper">
+                <img src="../../assets/placeholder-image-300x225.png" alt="News cover" class="news-cover">
+            </div>
+            <div class="news-wrapper">
+                <p class="news-text">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, quae temporibus nemo ex tempore,
+                    corporis voluptatem maxime perferendis suscipit vel natus id, commodi doloribus hic tenetur alias
+                    quaerat voluptate iure?
+                </p>
+                <p class="news-information">
+                    <span class="author">Placeholder Author</span>
+                    <span class="date">Placeholder Date</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="test">
+        <p>{{test.news.test}}</p>
+    </div>
+    <div *ngIf="!news">Loading recent news,please wait.</div>
+</article>
