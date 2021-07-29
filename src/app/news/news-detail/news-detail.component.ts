@@ -1,30 +1,45 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { NewsService } from '../news.service';
-import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-news-detail',
   templateUrl: './news-detail.component.html',
   styleUrls: ['./news-detail.component.css']
 })
-export class NewsDetailComponent implements OnInit {
+export class NewsDetailComponent {
 
   newsDetail: any | undefined;
   totalNews: any;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private newsService:NewsService
-    ) { }
+  newsId: string = this.loadBlogIdFromRoute();
 
-  ngOnInit(): void {
-    this.activatedRoute.params.pipe(
-      tap(() => this.newsDetail = undefined),
-      switchMap(({ id }) => this.newsService.loadNewsDetail(id))
-    ).subscribe(newsDetail => this.newsDetail = newsDetail);
+  constructor(private newsService: NewsService, private route: Router) {
+    this.getNewsData();
+   }
 
-    this.totalNews = this.newsService.loadNews().subscribe(news => this.totalNews = news.length )
+   getNewsData() {
+    return this.newsService.loadNewsData(this.newsId).get().subscribe(news => {
+      if(news.data() === undefined){
+        this.route.navigateByUrl('not-found');
+      }
+
+      this.newsDetail = news.data();
+      this.newsDetail.id = news.id;
+      let date: number = this.newsDetail.createdOn.seconds + this.newsDetail.createdOn.nanoseconds;
+      this.newsDetail.createdOn =new Date(date);
+      // this.newsDetail.createdOn = new Date(this.newsDetail.createdOn)
+    })
   }
-  
+
+  deleteNews(id) {
+    this.newsService.deleteNews(id);
+    this.route.navigateByUrl('');
+  }
+
+  private loadBlogIdFromRoute() {
+    const index: number = this.route.url.lastIndexOf('/');
+    return this.route.url.substring(index + 1);
+  }
 }
+  

@@ -6,8 +6,8 @@
     </div>
     <div class="form-group">
         <label for="newsText">Text</label>
-        <textarea #newsTextInput="ngModel" type="text" name="newsText" id="newsText" ngModel required minlength="300"></textarea>
-        <div *ngIf="newsTextInput.touched && newsTextInput.errors?.required && newsTextInput.errors?.minlength" class="validation-error">Minimum requirement of 300 characters</div>
+        <textarea #contentInput="ngModel" type="text" name="content" id="content" ngModel required minlength="300"></textarea>
+        <div *ngIf="contentInput.touched && contentInput.errors?.required && contentInput.errors?.minlength" class="validation-error">Minimum requirement of 300 characters</div>
     </div>
     <button [disabled]="newNewsForm.invalid">Create</button>
 </form>

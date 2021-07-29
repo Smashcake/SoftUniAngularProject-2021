@@ -1,21 +1,28 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { INewsArticle } from '../interfaces/news-article';
 
 @Injectable()
 export class NewsService {
 
-  constructor(private http: HttpClient) { }
+  newsCall: string = "News";
 
-  loadNews(){
-    return this.http.get<object[]>(`https://jsonplaceholder.typicode.com/users`);
+  constructor(private http: HttpClient, private firestore: AngularFirestore) { }
+
+  loadNews() : AngularFirestoreCollection{
+    return this.firestore.collection(this.newsCall);
   }
 
-  loadNewsDetail(id: number){
-    return this.http.get<object>(`https://jsonplaceholder.typicode.com/users/${id}`);
+  loadNewsData(id: string): AngularFirestoreDocument {
+    return this.firestore.collection(this.newsCall).doc(id);
+  }
+  
+  createNews(newsData: INewsArticle): void{
+    this.firestore.collection(this.newsCall).add(newsData);
   }
 
-  loadTest(){
-    return this.http.get<object[]>(`https://softuniangularproject-2021-default-rtdb.europe-west1.firebasedatabase.app/.json`);
+  deleteNews(id: string): void{
+    this.firestore.collection(this.newsCall).doc(id).delete();
   }
-
 }

@@ -20,7 +20,7 @@ const routes: Routes = [
     {
         path: 'create-news',
         component: CreateNewsComponent
-    }
+    },   
   ];
 
 export const NewsRoutingModule = RouterModule.forChild(routes);

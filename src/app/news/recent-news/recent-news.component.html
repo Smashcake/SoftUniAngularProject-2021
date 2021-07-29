@@ -3,7 +3,7 @@
         <div class="news-name">
             <a [routerLink]="['/news-detail', n?.id]" class="news-title">
                 <h3>
-                    {{n.name}}
+                    {{n.data.title}}
                 </h3>
             </a>
         </div>
@@ -13,19 +13,14 @@
             </div>
             <div class="news-wrapper">
                 <p class="news-text">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, quae temporibus nemo ex tempore,
-                    corporis voluptatem maxime perferendis suscipit vel natus id, commodi doloribus hic tenetur alias
-                    quaerat voluptate iure?
+                   {{n.data.content}}
                 </p>
                 <p class="news-information">
                     <span class="author">Placeholder Author</span>
-                    <span class="date">Placeholder Date</span>
+                    <span class="date">{{n.data.createdOn}}</span>
                 </p>
             </div>
         </div>
-    </div>
-    <div *ngIf="test">
-        <p>{{test.news.test}}</p>
     </div>
     <div *ngIf="!news">Loading recent news,please wait.</div>
 </article>

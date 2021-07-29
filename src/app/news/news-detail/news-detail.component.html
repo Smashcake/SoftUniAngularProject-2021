@@ -1,11 +1,12 @@
 <div *ngIf="newsDetail">
-    <p>{{newsDetail.name}}</p>
-    <p>{{newsDetail.username}}</p>
-    <p>{{newsDetail.email}}</p>
-    <p>{{newsDetail.address.city}}</p>
-    <p>{{newsDetail.address.geo.lat}}</p>
+    <p>{{newsDetail.title}}</p>
+    <p>{{newsDetail.context}}</p>
+    <p>{{newsDetail.createdOn}}</p>
     <button [routerLink]="['/news-detail', newsDetail.id - 1]" *ngIf="newsDetail.id - 1 > 0">Previous</button>
     <button [routerLink]="['/news-detail', newsDetail.id + 1]" *ngIf="newsDetail.id + 1 <= totalNews">Next</button>
 </div>
-<!-- <div *ngif="newsDetail === undefined">Please wait while we load this news article.</div> -->
+<div>
+    <button (click)="deleteNews(newsDetail.id)">DELETE</button>
+</div>
+<div *ngif="newsDetail === undefined">Please wait while we load this news article.</div>
 <button type="button" routerLink="/recent-news">Back to recent news</button>

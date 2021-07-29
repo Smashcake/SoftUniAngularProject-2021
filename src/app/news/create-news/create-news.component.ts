@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { INewsArticle } from 'src/app/interfaces/news-article';
+import { NewsService } from '../news.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-news',
@@ -7,12 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateNewsComponent implements OnInit {
 
-  constructor() { }
+  newsCall = 'News';
+
+  constructor(private newsService: NewsService, private route: Router) { }
 
   ngOnInit(): void {
   }
 
-  createNews(newsData){
-    console.log(newsData.newsText);
+  createNews(newsData: INewsArticle){
+    newsData.createdOn = new Date();
+    this.newsService.createNews(newsData);
+    this.route.navigateByUrl("");
   }
 }

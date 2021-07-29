@@ -8,8 +8,7 @@ import { NewsService } from '../news.service';
 })
 export class RecentNewsComponent {
 
-  news: object[] | undefined;
-  test: object[] | undefined;
+  news: any[] | undefined;
 
   constructor(private newsService: NewsService) {
     this.loadRecentNews();
@@ -17,8 +16,16 @@ export class RecentNewsComponent {
 
   loadRecentNews() {
     this.news = undefined;
-    this.test = undefined;
-    this.newsService.loadNews().subscribe(news => this.news = news);
-    this.newsService.loadTest().subscribe(test => this.test = test);
+    this.newsService.loadNews().get().subscribe(n => {
+
+      this.news = n.docs.map(n => { 
+        return { 
+          data: n.data(),
+          id: n.id
+        }
+      });
+      console.log(this.news);
+    });
   }
+  
 }
