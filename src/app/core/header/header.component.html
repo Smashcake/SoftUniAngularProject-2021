@@ -4,21 +4,25 @@
     </article>
     <article class="header-navigation">
         <ul class="header-navigation-list">
-            <li class="header-navigation-item">
-                <a routerLink="/login" class="navigation-item">Login</a>
-            </li>
-            <li class="header-navigation-item">
-                <a routerLink="/register" class="navigation-item">Register</a>
-            </li>
-            <li class="header-navigation-item">
-                <a routerLink="/create-news" class="navigation-item">Create news</a>
-            </li>
-            <li class="header-navigation-item">
-                <a routerLink="/recent-news" class="navigation-item">Recent-news</a>
-            </li>
-            <li class="header-navigation-item">
-                <a class="navigation-item">Placeholder</a>
-            </li>
+            <div *ngIf="isLogged" class="logged-Nav-Items">
+                <li class="header-navigation-item">
+                    <a routerLink="/create-news" class="navigation-item">Create news</a>
+                </li>
+                <li class="header-navigation-item">
+                    <a routerLink="/recent-news" class="navigation-item">Recent-news</a>
+                </li>
+                <li *ngIf="isLogged" class="header-navigation-item">
+                    <a (click)="logoutHandler()" class="navigation-item">Logout</a>
+                </li>
+            </div>
+            <div *ngIf="!isLogged" class="notLogged-Nav-Items">
+                <li class="header-navigation-item">
+                    <a routerLink="/login" class="navigation-item">Login</a>
+                </li>
+                <li class="header-navigation-item">
+                    <a routerLink="/register" class="navigation-item">Register</a>
+                </li>
+            </div>
         </ul>
     </article>
 </section>

@@ -5,7 +5,7 @@
     margin:0px 20px;
 }
 
-.header-navigation-list{
+.header-navigation-list,.header-navigation-list div{
     display:flex;
 }
 

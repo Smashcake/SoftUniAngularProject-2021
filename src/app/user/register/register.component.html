@@ -1,8 +1,15 @@
-<form #registerForm="ngForm" (ngSubmit)="registerHandler(registerForm.value)">
+<form #registerForm="ngForm" (ngSubmit)="registerHandler(registerForm)">
     <div class="form-group">
-        <label for="username">Username</label>
-        <input #usernameInput="ngModel" type="text" name="username" id="username" ngModel required>
-        <div *ngIf="usernameInput.touched && usernameInput.errors?.required" class="validation-error">Username is required!</div>
+        <label for="name">Name</label>
+        <input #nameInput="ngModel" type="text" name="name" id="name" ngModel required [minlength]="2">
+        <div *ngIf="nameInput.touched && nameInput.errors?.required" class="validation-error">Name is required!</div>
+        <div *ngIf="nameInput.touched && nameInput.errors?.minlength" class="validation-error">Your name can't be less than 2 characters</div>
+    </div>
+    <div class="form-group">
+        <label for="surname">Surname</label>
+        <input #surnameInput="ngModel" type="text" name="surname" id="surname" ngModel required [minlength]="2">
+        <div *ngIf="surnameInput.touched && surnameInput.errors?.required" class="validation-error">Surname is required!</div>
+        <div *ngIf="surnameInput.touched && surnameInput.errors?.minlength" class="validation-error">Your surname can't be less than 2 characters</div>
     </div>
     <div class="form-group">
         <label for="email">Email</label>
@@ -12,16 +19,16 @@
     </div>
     <div class="form-group">
         <label for="password">Password</label>
-        <input #passwordInput="ngModel" type="password" name="password" id="password" ngModel required>
+        <input #passwordInput="ngModel" type="password" name="password" id="password" ngModel required [minlength]="6">
         <div *ngIf="passwordInput.touched && passwordInput.errors?.required" class="validation-error">Password is required!</div>
+        <div *ngIf="passwordInput.touched && passwordInput.errors?.minlength" class="validation-error">Minimal password lenght is 6 characters</div>
     </div>
     <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
-        <input #confirmPasswordInput="ngModel" type="password" name="confirmPassword" id="confirmPassword" ngModel required>
+        <input #confirmPasswordInput="ngModel" type="password" name="confirmPassword" id="confirmPassword" ngModel required [minlength]="6"> 
         <div *ngIf="confirmPasswordInput.touched && confirmPasswordInput.errors?.required" class="validation-error">Confirm your password!</div>
+        <div *ngIf="confirmPasswordInput.touched && confirmPasswordInput.errors?.minlength" class="validation-error">Minimal password lenght is 6 characters</div>
         <div *ngIf="confirmPasswordInput.value !== passwordInput.value"  class="validation-error">Passwords do not match!</div>
     </div>
-    <button [disabled]="registerForm.invalid">Login</button>
+    <button [disabled]="registerForm.invalid">Register</button>
 </form>
-
-{{registerForm.value | json}}

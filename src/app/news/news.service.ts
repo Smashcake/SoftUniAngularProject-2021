@@ -18,8 +18,8 @@ export class NewsService {
     return this.firestore.collection(this.newsCall).doc(id);
   }
   
-  createNews(newsData: INewsArticle): void{
-    this.firestore.collection(this.newsCall).add(newsData);
+  createNews(newsData: INewsArticle): Promise<any>{
+    return this.firestore.collection(this.newsCall).add(newsData);
   }
 
   deleteNews(id: string): void{

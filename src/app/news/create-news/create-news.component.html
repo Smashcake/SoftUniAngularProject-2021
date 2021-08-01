@@ -1,4 +1,4 @@
-<form #newNewsForm="ngForm" (ngSubmit)="createNews(newNewsForm.value)">
+<form #newNewsForm="ngForm" (ngSubmit)="createNews(newNewsForm)">
     <div class="form-group">
         <label for="title">Title</label>
         <input #titleInput="ngModel" type="text" name="title" id="title" ngModel required>
