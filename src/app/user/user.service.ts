@@ -3,6 +3,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { AngularFireAuth } from '@angular/fire/auth';
 import { IRegisterUser } from '../interfaces/register-user';
 import { ILoginUser } from '../interfaces/login-user';
+import { IComment } from '../interfaces/comment';
 
 @Injectable()
 export class UserService {
@@ -34,6 +35,18 @@ export class UserService {
 
   getUserData(id: string): AngularFirestoreDocument{
     return this.firestore.collection(this.userCall).doc(id);
+  }
+
+  addCommentToUserComments(userId: string, comment: IComment): Promise<any>{
+    let currentUser: any = {};
+    let comments = [];
+    this.getUserData(userId).get().subscribe(user => {
+      currentUser = user.data();
+      comments = currentUser?.comments === undefined ? [] : currentUser.comments;
+      comments.push(comment);
+      this.getUserData(userId).update({ comments: comments});
+    });
+    return ;
   }
 }
 

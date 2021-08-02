@@ -28,7 +28,7 @@
         <input #confirmPasswordInput="ngModel" type="password" name="confirmPassword" id="confirmPassword" ngModel required [minlength]="6"> 
         <div *ngIf="confirmPasswordInput.touched && confirmPasswordInput.errors?.required" class="validation-error">Confirm your password!</div>
         <div *ngIf="confirmPasswordInput.touched && confirmPasswordInput.errors?.minlength" class="validation-error">Minimal password lenght is 6 characters</div>
-        <div *ngIf="confirmPasswordInput.value !== passwordInput.value"  class="validation-error">Passwords do not match!</div>
+        <div *ngIf="confirmPasswordInput.value !== passwordInput.value" class="validation-error">Passwords do not match!</div>
     </div>
     <button [disabled]="registerForm.invalid">Register</button>
 </form>

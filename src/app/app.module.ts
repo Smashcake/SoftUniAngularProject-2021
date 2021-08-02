@@ -21,8 +21,6 @@ import { UserService } from './user/user.service';
     AppComponent,
     FooterComponent,
     HeaderComponent,
-    RecentNewsComponent,
-    NewsDetailComponent,
   ],
   imports: [
     BrowserModule,
