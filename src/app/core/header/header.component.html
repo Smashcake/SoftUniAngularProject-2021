@@ -1,17 +1,22 @@
 <section class="header-wrapper">
     <article class="header-logo-wrapper">
-        <img src="../../../favicon.ico" alt="favIcon">
+        <a routerLink="" class="home-logo-nav">
+            <img src="../../../favicon.ico" alt="favIcon">
+        </a>
     </article>
     <article class="header-navigation">
         <ul class="header-navigation-list">
             <div *ngIf="isLogged" class="logged-Nav-Items">
+                <li class="header-navigation-item">
+                    <a [routerLink]="['/profile', userId]" class="navigation-item">Profile</a>
+                </li>
                 <li class="header-navigation-item">
                     <a routerLink="/create-news" class="navigation-item">Create news</a>
                 </li>
                 <li class="header-navigation-item">
                     <a routerLink="/recent-news" class="navigation-item">Recent-news</a>
                 </li>
-                <li *ngIf="isLogged" class="header-navigation-item">
+                <li class="header-navigation-item">
                     <a (click)="logoutHandler()" class="navigation-item">Logout</a>
                 </li>
             </div>

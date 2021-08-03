@@ -11,10 +11,12 @@ import { UserService } from 'src/app/user/user.service';
 export class HeaderComponent {
 
   isLogged: boolean = false;
+  userId: string;
 
   constructor(private auth: AngularFireAuth, private userService: UserService, private route: Router) {
     this.auth.authState.subscribe(user => {
       this.isLogged = user?.uid ? true : false;
+      this.userId = user?.uid ? user.uid : undefined;
     });
   }
 

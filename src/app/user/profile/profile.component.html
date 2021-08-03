@@ -1,0 +1,27 @@
+<div *ngIf="userId" class="profile-wrapper">
+    <p>{{userProfile.name}}</p>
+    <p>{{userProfile.surname}}</p>
+    <p>{{userProfile.email}}</p>
+    <p>{{userProfile.password}}</p>
+    <div *ngIf="userProfile.newsArticles" class="articles-wrapper">
+        <ng-container>Your Articles:</ng-container>
+        <div *ngFor="let article of userProfile.newsArticles">    
+            <a [routerLink]="['/news-detail', article.id]" class="article-wrapper">
+                <p>{{article.title}}</p>
+                <p>{{article.content}}</p>
+                <p>{{article.createdOn}}</p>
+            </a>
+            <button (click)="deleteArticle(article.id)">DELETE</button>
+        </div>
+    </div>
+    <div *ngIf="userProfile.comments" class="comments-wrapper">
+        <ng-container>Your Comments:</ng-container>
+        <div *ngFor="let comment of userProfile.comments">         
+            <div>
+                <p>{{comment.content}}</p>
+                <p>{{comment.createdOn}}</p>
+                <button (click)="deleteComment(comment.id, comment.newsArticleId)">DELETE</button>
+            </div>
+        </div>
+    </div>
+</div>

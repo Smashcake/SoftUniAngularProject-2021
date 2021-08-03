@@ -5,4 +5,5 @@ export interface IComment {
     content: string,
     authorName: string,
     authorSurname: string,
+    id: string
 }

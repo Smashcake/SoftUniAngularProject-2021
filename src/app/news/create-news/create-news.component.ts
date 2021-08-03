@@ -42,15 +42,17 @@ export class CreateNewsComponent implements OnInit {
         surname: ''
       } as IRegisterUser,
       content: formInput.content,
-      createdById: this.userId
+      createdById: this.userId,
+      id: ''
     }
     
     this.userService.getUserData(this.userId).get().subscribe(userData => {
       news.createdBy.name = userData.data()?.name;
       news.createdBy.surname = userData.data()?.surname;
       this.newsService.createNews(news).then(x => {
-        this.route.navigateByUrl("");
+        this.userService.addArticleToUser(this.userId, news);
       })
+      this.route.navigateByUrl("");
     });
   }
 }

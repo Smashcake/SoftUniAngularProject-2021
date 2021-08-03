@@ -1,20 +1,24 @@
-.header-wrapper{
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-    margin:0px 20px;
+.header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0px 20px;
 }
 
-.header-navigation-list,.header-navigation-list div{
-    display:flex;
+.header-navigation-list,
+.header-navigation-list div {
+  display: flex;
 }
 
-.header-navigation-item{
-    list-style: none;
-    padding:10px;
-    margin:0px 10px;
+.header-navigation-item {
+  list-style: none;
+  padding: 10px;
+  margin: 0px 10px;
 }
 
-.navigation-item{
-    text-decoration: none;
+.navigation-item {
+  text-decoration: none;
+  color: black;
+  font-family: Helvetica, sans-serif;
+  font-size: 18px;
 }

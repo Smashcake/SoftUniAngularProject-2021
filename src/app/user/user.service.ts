@@ -4,6 +4,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { IRegisterUser } from '../interfaces/register-user';
 import { ILoginUser } from '../interfaces/login-user';
 import { IComment } from '../interfaces/comment';
+import { INewsArticle } from '../interfaces/news-article';
 
 @Injectable()
 export class UserService {
@@ -45,6 +46,18 @@ export class UserService {
       comments = currentUser?.comments === undefined ? [] : currentUser.comments;
       comments.push(comment);
       this.getUserData(userId).update({ comments: comments});
+    });
+    return ;
+  }
+
+  addArticleToUser(userId: string, article: INewsArticle): Promise<any>{
+    let currentUser: any = {};
+    let articles = [];
+    this.getUserData(userId).get().subscribe(user => {
+      currentUser = user.data();
+      articles = currentUser?.newsArticles === undefined ? [] : currentUser.newsArticles;
+      articles.push(article);
+      this.getUserData(userId).update({ newsArticles: articles});
     });
     return ;
   }

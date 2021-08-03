@@ -18,7 +18,7 @@ export class NewsDetailComponent {
   totalNews: any;
   hasCommented: boolean;
 
-  newsId: string = this.loadBlogIdFromRoute();
+  newsId: string = this.getNewsId();
 
   constructor(private newsService: NewsService, private route: Router, private auth: AngularFireAuth, private userService: UserService) {
     this.getNewsData();
@@ -40,9 +40,10 @@ export class NewsDetailComponent {
     })
   }
 
-  deleteNews(id) {
-    this.newsService.deleteNews(id);
-    this.route.navigateByUrl('');
+  deleteNews(id: string) {
+    this.newsService.deleteNews(id, this.userId).then(x => {
+      setTimeout(() => this.route.navigateByUrl(''), 200)
+    }); 
   }
 
   commentHandler(commentData: NgForm, articleId: string) {
@@ -56,36 +57,43 @@ export class NewsDetailComponent {
       authorId: this.userId,
       authorName: '',
       authorSurname: '',
-      newsArticleId: articleId
-    }
-    
+      newsArticleId: articleId,
+      id: ''
+    };
+
     this.userService.getUserData(this.userId).get().subscribe((user) => {
       commentInfo.authorName = user.data()?.name;
       commentInfo.authorSurname = user.data()?.surname;
+
       this.newsService.addComment(commentInfo).then(x => {
         this.newsService.addCommentToNewsArticle(articleId, commentInfo);
         this.userService.addCommentToUserComments(this.userId, commentInfo)
       }).then(y => {
-        this.redirectTo(`news-detail/${articleId}`)
+        setTimeout(() => this.redirectTo(`news-detail/${articleId}`), 200);       
       });
     });
 
   }
 
-  private loadBlogIdFromRoute() {
+  private getNewsId() {
     const index: number = this.route.url.lastIndexOf('/');
     return this.route.url.substring(index + 1);
   }
 
-  redirectTo(uri:string){
-    this.route.navigateByUrl('/', {skipLocationChange: true}).then(()=>
-    this.route.navigate([uri]));
- }
+  redirectTo(uri: string) {
+    this.route.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+      this.route.navigate([uri]));
+  }
 
-//  canUserComment(): boolean {
-//    var comments = this.newsDetail.comments;
-//    console.log("comments");
-//    return false;
-//  }
+  deleteComment(commentId: string, newsArticleId: string, userId: string){
+    this.newsService.deleteComment(commentId, newsArticleId, userId).then(x => {
+      setTimeout(() => this.redirectTo(`news-detail/${newsArticleId}`), 200);
+    });
+  }
+  //  canUserComment(): boolean {
+  //    var comments = this.newsDetail.comments;
+  //    console.log("comments");
+  //    return false;
+  //  }
 }
 
