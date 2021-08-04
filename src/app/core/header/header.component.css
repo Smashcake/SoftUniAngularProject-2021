@@ -2,7 +2,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0px 20px;
+  background: #98e2fb;
+}
+
+.header-logo-wrapper{
+  margin-left:10px;
 }
 
 .header-navigation-list,
@@ -19,6 +23,5 @@
 .navigation-item {
   text-decoration: none;
   color: black;
-  font-family: Helvetica, sans-serif;
   font-size: 18px;
 }

@@ -1,18 +1,20 @@
-<div *ngIf="newsDetail">
-    <p>{{newsDetail.title}}</p>
-    <p>{{newsDetail.content}}</p>
-    <p>{{newsDetail.createdOn}}</p>
-    <p>{{newsDetail.createdBy.name}} {{newsDetail.createdBy.surname}}</p>
+<div *ngIf="newsDetail" class="news-detail-wrapper">
+    <h2>{{newsDetail.title}}</h2>
+    <p class="news-content">{{newsDetail.content}}</p>
+    <p class="news-date">{{newsDetail.createdOn}}</p>
+    <p class="news-author">{{newsDetail.createdBy.name}} {{newsDetail.createdBy.surname}}</p>
     <div>
-        <button *ngIf="userId === newsDetail.createdById && userId" (click)="deleteNews(newsDetail.id)">DELETE</button>
+        <button *ngIf="userId === newsDetail.createdById && userId" (click)="deleteNews(newsDetail.id)">DELETE ARTICLE</button>
     </div>
-    <form *ngIf="userId !== undefined" #commentForm="ngForm" (ngSubmit)="commentHandler(commentForm, newsDetail.id)">
+    <form class="comment-form" *ngIf="userId !== undefined" #commentForm="ngForm" (ngSubmit)="commentHandler(commentForm, newsDetail.id)">
         <div class="form-group">
             <textarea #commentInput="ngModel" type="text" name="comment" id="comment" placeholder="Leave a comment"
                 ngModel required></textarea>
             <div *ngIf="commentInput.touched && commentInput.errors?.required" class="validator-error"></div>
         </div>
-        <button>Add comment</button>
+        <div>
+            <button><i class="far fa-comment"></i> Comment</button>
+        </div>
     </form>
     <div *ngIf="newsDetail.comments" class="news-comments">
         <div *ngFor="let comment of newsDetail.comments">
