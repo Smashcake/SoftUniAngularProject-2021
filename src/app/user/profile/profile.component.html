@@ -1,22 +1,66 @@
 <div *ngIf="userId" class="profile-wrapper">
-    <p>{{userProfile.name}}</p>
-    <p>{{userProfile.surname}}</p>
-    <p>{{userProfile.email}}</p>
-    <p>{{userProfile.password}}</p>
+    <div *ngIf="!editMode">
+        <div>
+            <label for="name">Name</label>
+            <p>{{userProfile.name}}</p>
+        </div>
+        <div>
+            <label for="surname">Surname</label>
+            <p>{{userProfile.surname}}</p>
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <p>{{userProfile.email}}</p>
+        </div>
+        <button (click)="editMode = true">Edit</button>
+    </div>
+    <div *ngIf="editMode">
+        <div class="name-wrapper">
+            <label for="name">Name</label>
+            <input #profileName type="text" ngModel="{{userProfile.name}}">
+        </div>
+        <div class="surname-wrapper">
+            <label for="surname">Surname</label>
+            <input #profileSurname type="text" ngModel="{{userProfile.surname}}">
+        </div>
+        <div class="email-wrapper">
+            <label for="email">Email</label>
+            <input #profileEmail type="email" ngModel="{{userProfile.email}}">
+        </div>
+        <!-- <form #newPasswordForm="ngForm">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input #passwordInput="ngModel" type="password" name="password" id="password" ngModel required [minlength]="6">
+                <div *ngIf="passwordInput.touched && passwordInput.errors?.required" class="validation-error">Password is required!</div>
+                <div *ngIf="passwordInput.touched && passwordInput.errors?.minlength" class="validation-error">Minimal password length is 6 characters</div>
+                <input type="checkbox" (click)="togglePasswordVisibility()">Toggle Password Visibility
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input #confirmPasswordInput="ngModel" type="password" name="confirmPassword" id="confirmPassword" ngModel required [minlength]="6"> 
+                <div *ngIf="confirmPasswordInput.touched && confirmPasswordInput.errors?.required" class="validation-error">Confirm your password!</div>
+                <div *ngIf="confirmPasswordInput.touched && confirmPasswordInput.errors?.minlength" class="validation-error">Minimal password length is 6 characters</div>
+                <div *ngIf="confirmPasswordInput.value !== passwordInput.value" class="validation-error">Passwords do not match!</div>
+                <input type="checkbox" (click)="toggleConfirmPasswordVisibility()">Toggle Password Visibility
+            </div>
+        </form>        -->
+        <button
+            (click)="saveProfile(profileName.value, profileSurname.value, profileEmail.value, userProfile.email, userId); editMode = false">Save</button>
+            <button (click)="editMode = false">Cancel</button>
+    </div>
     <div *ngIf="userProfile.newsArticles" class="articles-wrapper">
         <ng-container>Your Articles:</ng-container>
-        <div *ngFor="let article of userProfile.newsArticles">    
-            <a [routerLink]="['/news-detail', article.id]" class="article-wrapper">
-                <p>{{article.title}}</p>
-                <p>{{article.content}}</p>
-                <p>{{article.createdOn}}</p>
-            </a>
-            <button (click)="deleteArticle(article.id)">DELETE</button>
+        <div *ngFor="let article of userProfile.newsArticles">
+                <a [routerLink]="['/news-detail', article.id]" class="article-wrapper">
+                    <p>{{article.title}}</p>
+                    <p>{{article.content}}</p>
+                    <p>{{article.createdOn}}</p>
+                </a>
         </div>
     </div>
     <div *ngIf="userProfile.comments" class="comments-wrapper">
         <ng-container>Your Comments:</ng-container>
-        <div *ngFor="let comment of userProfile.comments">         
+        <div *ngFor="let comment of userProfile.comments">
             <div>
                 <p>{{comment.content}}</p>
                 <p>{{comment.createdOn}}</p>

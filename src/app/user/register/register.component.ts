@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { IRegisterUser } from 'src/app/interfaces/register-user';
 import { UserService } from '../user.service';
@@ -13,7 +13,11 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent{
 
-  constructor(private userService: UserService, private auth: AngularFireAuth, private route: Router) { }
+  @ViewChild('passwordInput') passwordInput: ElementRef<HTMLInputElement>;
+  @ViewChild('confirmPasswordInput') confirmPasswordInput: ElementRef<HTMLInputElement>;
+
+
+  constructor(private userService: UserService, private auth: AngularFireAuth, private route: Router, private renderer: Renderer2) { }
 
   registerHandler(registerData: NgForm){
     if(registerData.invalid){
@@ -39,6 +43,26 @@ export class RegisterComponent{
       console.log(err);
     });
 
-    this.route.navigateByUrl("/login");
+    this.route.navigateByUrl("/");
+  }
+
+  togglePasswordVisibility(){
+    let element = this.passwordInput.nativeElement;
+    if (element.type === 'password'){
+      this.renderer.setAttribute(element, 'type' , 'text');
+    }
+    else {
+      this.renderer.setAttribute(element, 'type' , 'password');
+    }
+  }
+
+  toggleConfirmPasswordVisibility(){
+    let element = this.confirmPasswordInput.nativeElement;
+    if (element.type === 'password'){
+      this.renderer.setAttribute(element, 'type' , 'text');
+    }
+    else {
+      this.renderer.setAttribute(element, 'type' , 'password');
+    }
   }
 }

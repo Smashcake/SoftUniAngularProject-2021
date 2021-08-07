@@ -13,53 +13,82 @@ export class UserService {
 
   constructor(private fireAuth: AngularFireAuth, private firestore: AngularFirestore) { }
 
-  registerUser(registerData: IRegisterUser){
+  registerUser(registerData: IRegisterUser) {
     return this.fireAuth.createUserWithEmailAndPassword(registerData.email, registerData.password);
   }
 
-  addUserToDB(userId, userData: IRegisterUser){
+  addUserToDB(userId, userData: IRegisterUser) {
     this.firestore.collection(this.userCall).doc(userId).set({
       name: userData.name,
       surname: userData.surname,
       email: userData.email,
-      createdOn: userData.createdOn
+      createdOn: userData.createdOn,
+      comments: userData.comments,
+      newsArticles: userData.newsArticles
     })
   };
 
-  loginUser(loginData: ILoginUser){
+  loginUser(loginData: ILoginUser) {
     return this.fireAuth.signInWithEmailAndPassword(loginData.email, loginData.password);
   }
 
-  logoutUser(){
+  logoutUser() {
     return this.fireAuth.signOut();
   }
 
-  getUserData(id: string): AngularFirestoreDocument{
+  getUserData(id: string): AngularFirestoreDocument {
     return this.firestore.collection(this.userCall).doc(id);
   }
 
-  addCommentToUserComments(userId: string, comment: IComment): Promise<any>{
+  addCommentToUserComments(userId: string, comment: IComment): Promise<any> {
     let currentUser: any = {};
     let comments = [];
     this.getUserData(userId).get().subscribe(user => {
       currentUser = user.data();
       comments = currentUser?.comments === undefined ? [] : currentUser.comments;
       comments.push(comment);
-      this.getUserData(userId).update({ comments: comments});
+      this.getUserData(userId).update({ comments: comments });
     });
-    return ;
+    return;
   }
 
-  addArticleToUser(userId: string, article: INewsArticle): Promise<any>{
+  addArticleToUser(userId: string, article: INewsArticle): Promise<any> {
     let currentUser: any = {};
     let articles = [];
     this.getUserData(userId).get().subscribe(user => {
       currentUser = user.data();
       articles = currentUser?.newsArticles === undefined ? [] : currentUser.newsArticles;
       articles.push(article);
+      this.getUserData(userId).update({ newsArticles: articles });
+    });
+    return;
+  }
+
+  updateUserEmail(email: string) {
+    this.fireAuth.authState.subscribe((user) => {
+      if (user) {
+        user.updateEmail(email).then(() => {
+          return;
+        }).catch((err) => {
+          console.log("something wong.");
+        })
+      }
+      else {
+        return;
+      }
+    });
+  }
+
+  editUserArticle(articleData: INewsArticle, articleId: string, userId: string) {
+    let articles = [];
+    let oldArticleInfo: INewsArticle;
+    this.getUserData(userId).get().subscribe((user) => {
+      articles = user?.data()?.newsArticles;
+      oldArticleInfo = articles.find(x => x.id === articleId);
+      oldArticleInfo.title = articleData.title;
+      oldArticleInfo.content = articleData.content;
       this.getUserData(userId).update({ newsArticles: articles});
     });
-    return ;
   }
 }
 

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { IRegisterUser } from 'src/app/interfaces/register-user';
+
 import { IUserProfile } from 'src/app/interfaces/user-profile';
 import { NewsService } from 'src/app/news/news.service';
 import { UserService } from '../user.service';
@@ -12,6 +12,10 @@ import { UserService } from '../user.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
+
+  
+  @ViewChild('passwordInput') passwordInput: ElementRef<HTMLInputElement>;
+  @ViewChild('confirmPasswordInput') confirmPasswordInput: ElementRef<HTMLInputElement>;
 
   userProfile: IUserProfile = {
     newsArticles: [],
@@ -24,7 +28,7 @@ export class ProfileComponent {
 
   userId: string;
 
-  constructor(private auth: AngularFireAuth, private userService: UserService, private newsService: NewsService, private route: Router) {
+  constructor(private auth: AngularFireAuth, private userService: UserService, private newsService: NewsService, private route: Router, private renderer: Renderer2) {
     this.auth.authState.subscribe(user => {
       this.userId = user?.uid ? user.uid : undefined;
       this.userService.getUserData(this.userId).get().subscribe(user => {
@@ -33,7 +37,6 @@ export class ProfileComponent {
         this.userProfile.name = user?.data().name;
         this.userProfile.surname = user?.data().surname;
         this.userProfile.email = user?.data().email;
-        this.userProfile.password = user?.data().password;
       });
     });
   }
@@ -49,10 +52,34 @@ export class ProfileComponent {
       this.route.navigate([uri]));
   }
 
-  deleteArticle(articleId: string) {
-    this.newsService.deleteNews(articleId, this.userId).then(x => {
-      setTimeout(() => this.redirectTo(`profile/${this.userId}`), 200);
-    });
-
+  saveProfile(name: string, surname: string, email: string, oldEmail: string, userId: string) {
+    if (email !== oldEmail){
+      this.userService.updateUserEmail(email);
+      this.userService.getUserData(userId).update({ name: name, surname: surname, email: email});
+    }
+    else{
+      this.userService.getUserData(userId).update({ name: name, surname: surname});
+    }
   }
+
+  // togglePasswordVisibility(){
+  //   let element = this.passwordInput.nativeElement;
+  //   if (element.type === 'password'){
+  //     this.renderer.setAttribute(element, 'type' , 'text');
+  //   }
+  //   else {
+  //     this.renderer.setAttribute(element, 'type' , 'password');
+  //   }
+  // }
+
+  // toggleConfirmPasswordVisibility(){
+  //   let element = this.confirmPasswordInput.nativeElement;
+  //   if (element.type === 'password'){
+  //     this.renderer.setAttribute(element, 'type' , 'text');
+  //   }
+  //   else {
+  //     this.renderer.setAttribute(element, 'type' , 'password');
+  //   }
+  // }
+
 }

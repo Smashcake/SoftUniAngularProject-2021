@@ -37,7 +37,16 @@ export class NewsDetailComponent {
       this.newsDetail.id = news.id;
       let date: number = this.newsDetail.createdOn.seconds + this.newsDetail.createdOn.nanoseconds;
       this.newsDetail.createdOn = new Date(date);
-    })
+      let userComments = [];
+      userComments = this.newsDetail.comments;
+      if (!userComments.find(x => x.authorId === this.userId)){
+        this.hasCommented = false;
+      }
+      else{
+        this.hasCommented = true;
+      }
+    });
+    
   }
 
   deleteNews(id: string) {
@@ -90,10 +99,19 @@ export class NewsDetailComponent {
       setTimeout(() => this.redirectTo(`news-detail/${newsArticleId}`), 200);
     });
   }
-  //  canUserComment(): boolean {
-  //    var comments = this.newsDetail.comments;
-  //    console.log("comments");
-  //    return false;
-  //  }
+
+  saveArticle(newsData: NgForm, newsId: string){
+    if (newsData.invalid){
+      return;
+    }
+    this.userService.editUserArticle(newsData.value, newsId, this.userId);
+    this.newsService.editArticle(newsData.value, newsId).then(x => {
+      setTimeout(() => this.redirectTo(`news-detail/${newsId}`), 200, 200);
+    });
+  }
+
+  saveComment(content: string,commentId: string, newsArticleId: string, userId: string){
+    console.log("sadness");
+  }
 }
 

@@ -1,12 +1,50 @@
 <div *ngIf="newsDetail" class="news-detail-wrapper">
-    <h2>{{newsDetail.title}}</h2>
-    <p class="news-content">{{newsDetail.content}}</p>
-    <p class="news-date">{{newsDetail.createdOn}}</p>
-    <p class="news-author">{{newsDetail.createdBy.name}} {{newsDetail.createdBy.surname}}</p>
-    <div>
-        <button *ngIf="userId === newsDetail.createdById && userId" (click)="deleteNews(newsDetail.id)">DELETE ARTICLE</button>
+    <div *ngIf="!editMode">
+        <h2>{{newsDetail.title}}</h2>
+        <p class="news-content">{{newsDetail.content}}</p>
+        <p class="news-date">{{newsDetail.createdOn}}</p>
+        <p class="news-author">{{newsDetail.createdBy.name}} {{newsDetail.createdBy.surname}}</p>
+        <button (click)="editMode = true">Edit</button>
     </div>
-    <form class="comment-form" *ngIf="userId !== undefined" #commentForm="ngForm" (ngSubmit)="commentHandler(commentForm, newsDetail.id)">
+    <div *ngIf="editMode">
+        <form #editNewsForm="ngForm" class="form-wrapper" (ngSubmit)="saveArticle(editNewsForm, newsDetail.id)">
+            <div class="form-group">
+                <div class="title-wrapper">
+                    <div class="title">
+                        <label for="title-wrapper">Title</label>
+                        <input #titleInput="ngModel" type="text" name="title" id="title" [ngModel]="newsDetail.title"
+                            required [minlength]="4">
+                    </div>
+                    <div>
+                        <div *ngIf="titleInput.touched && titleInput.errors?.required" class="validation-error">A title
+                            is
+                            required</div>
+                        <div *ngIf="titleInput.touched && titleInput.errors?.minlength" class="validation-error">Minimum
+                            title length of 4 characters</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="content-wrapper">
+                    <div class="content">
+                        <label for="newsText">Text</label>
+                        <textarea #contentInput="ngModel" type="text" name="content" id="content"
+                            [ngModel]="newsDetail.content" required minlength="300"></textarea>
+                    </div>
+                    <div *ngIf="contentInput.touched && contentInput.errors?.required || contentInput.errors?.minlength"
+                        class="validation-error">Minimum requirement of 300 characters</div>
+                </div>
+            </div>
+            <button [disabled]="editNewsForm.invalid" class="create-button">Save</button>
+            <button (click)="editMode = false">Cancel</button>
+        </form>
+        <div>
+            <button *ngIf="userId === newsDetail.createdById && userId" (click)="deleteNews(newsDetail.id)">DELETE
+                ARTICLE</button>
+        </div>
+    </div>
+    <form class="comment-form" *ngIf="userId !== undefined && hasCommented === false" #commentForm="ngForm"
+        (ngSubmit)="commentHandler(commentForm, newsDetail.id)">
         <div class="form-group">
             <textarea #commentInput="ngModel" type="text" name="comment" id="comment" placeholder="Leave a comment"
                 ngModel required></textarea>
@@ -17,12 +55,24 @@
         </div>
     </form>
     <div *ngIf="newsDetail.comments" class="news-comments">
-        <div *ngFor="let comment of newsDetail.comments">
-            <div class="comment-wrapper">
+        <div *ngFor="let comment of newsDetail.comments, let i = index">
+            <div *ngIf="!commentEditMode" class="comment-wrapper">
                 <p class="comment-content">{{comment.content}}</p>
                 <span>{{comment.authorName}} {{comment.authorSurname}}</span>
                 <span>{{comment.createdOn}}</span>
-                <button *ngIf="comment.authorId == userId" (click)="deleteComment(comment.id, newsDetail.id, userId)">DELETE</button>
+                <button *ngIf="comment.authorId == userId"
+                    (click)="commentEditMode = true;toggl === i ? toggl = null : toggl = i">Edit</button>
+                <button *ngIf="comment.authorId == userId"
+                    (click)="deleteComment(comment.id, newsDetail.id, userId)">DELETE</button>
+            </div>
+            <div *ngIf="commentEditMode" class="comment-wrapper">
+                <div *ngIf="toggl === i">
+                    <textarea #commentEditedContent type="text" class="comment-content" id="comment"
+                        [ngModel]="comment.content"></textarea>
+                    <button
+                        (click)="saveComment(commentEditedContent.value, comment.id, newsDetail.id, userId);commentEditMode = false;toggl === i ? toggl = null : toggl = i">Save</button>
+                        <button (click)="commentEditMode = false;toggl === i ? toggl = null : toggl = i">Cancel</button>
+                </div>
             </div>
         </div>
     </div>

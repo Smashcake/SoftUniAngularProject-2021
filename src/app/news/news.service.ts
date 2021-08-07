@@ -86,4 +86,8 @@ export class NewsService {
     });
     return this.firestore.collection(this.comments).doc(commentId).delete();
   }
+
+  editArticle(articleData: INewsArticle, id: string){
+    return this.firestore.collection(this.newsCall).doc(id).update({ title: articleData.title, content: articleData.content});
+  }
 }
