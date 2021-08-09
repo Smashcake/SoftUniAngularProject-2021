@@ -87,7 +87,25 @@ export class NewsService {
     return this.firestore.collection(this.comments).doc(commentId).delete();
   }
 
-  editArticle(articleData: INewsArticle, id: string){
-    return this.firestore.collection(this.newsCall).doc(id).update({ title: articleData.title, content: articleData.content});
+  editArticle(articleData: INewsArticle, id: string) {
+    return this.firestore.collection(this.newsCall).doc(id).update({ title: articleData.title, content: articleData.content });
+  }
+
+  editArticleComment(articleId: string, commentId: string, newContent: string): Promise<any> {
+    let article: any = {};
+    let articleComments: any = [];
+    let comment: any = {};
+    let articleCommentIndex: number;
+    this.loadNewsData(articleId).get().subscribe(newsArticle => {
+      article = newsArticle?.data();
+      articleComments = article?.comments;
+      articleCommentIndex = articleComments.findIndex(x => x.id === commentId);
+      if (articleCommentIndex > -1) {
+        comment = articleComments[articleCommentIndex];
+        comment.content = newContent;
+        this.loadNewsData(articleId).update({ comments: articleComments });
+      }
+    });
+    return this.firestore.collection(this.comments).doc(commentId).update({ content: newContent });
   }
 }

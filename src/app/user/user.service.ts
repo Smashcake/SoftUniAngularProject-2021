@@ -11,7 +11,19 @@ export class UserService {
 
   userCall = "users";
 
-  constructor(private fireAuth: AngularFireAuth, private firestore: AngularFirestore) { }
+  isLogged: boolean;
+
+
+  constructor(private fireAuth: AngularFireAuth, private firestore: AngularFirestore) {
+    this.fireAuth.onAuthStateChanged((user) => {
+      if (user === null) {
+        this.isLogged = false;
+      }
+      else {
+        this.isLogged = true;
+      }
+    })
+  }
 
   registerUser(registerData: IRegisterUser) {
     return this.fireAuth.createUserWithEmailAndPassword(registerData.email, registerData.password);
@@ -87,7 +99,18 @@ export class UserService {
       oldArticleInfo = articles.find(x => x.id === articleId);
       oldArticleInfo.title = articleData.title;
       oldArticleInfo.content = articleData.content;
-      this.getUserData(userId).update({ newsArticles: articles});
+      this.getUserData(userId).update({ newsArticles: articles });
+    });
+  }
+
+  editUserComment(commentId: string, userId: string, newContent: string) {
+    let comments = [];
+    let oldComment: IComment;
+    this.getUserData(userId).get().subscribe((user) => {
+      comments = user?.data()?.comments;
+      oldComment = comments.find(x => x.id === commentId);
+      oldComment.content = newContent;
+      this.getUserData(userId).update({ comments: comments });
     });
   }
 }

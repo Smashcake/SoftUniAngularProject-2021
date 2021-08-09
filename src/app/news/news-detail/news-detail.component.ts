@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IComment } from 'src/app/interfaces/comment';
@@ -20,7 +21,7 @@ export class NewsDetailComponent {
 
   newsId: string = this.getNewsId();
 
-  constructor(private newsService: NewsService, private route: Router, private auth: AngularFireAuth, private userService: UserService) {
+  constructor(private newsService: NewsService, private route: Router, private auth: AngularFireAuth, private userService: UserService,) {
     this.getNewsData();
     this.auth.authState.subscribe(user => {
       this.userId = user?.uid ? user.uid : undefined;
@@ -35,8 +36,7 @@ export class NewsDetailComponent {
 
       this.newsDetail = news.data();
       this.newsDetail.id = news.id;
-      let date: number = this.newsDetail.createdOn.seconds + this.newsDetail.createdOn.nanoseconds;
-      this.newsDetail.createdOn = new Date(date);
+      this.newsDetail.createdOn = this.newsDetail.createdOn;
       let userComments = [];
       userComments = this.newsDetail.comments;
       if (!userComments.find(x => x.authorId === this.userId)){
@@ -111,7 +111,10 @@ export class NewsDetailComponent {
   }
 
   saveComment(content: string,commentId: string, newsArticleId: string, userId: string){
-    console.log("sadness");
+    this.userService.editUserComment(commentId, userId, content);
+    this.newsService.editArticleComment(newsArticleId, commentId, content).then(x => {
+      setTimeout(() => this.redirectTo(`news-detail/${newsArticleId}`), 200, 200);
+    });
   }
 }
 

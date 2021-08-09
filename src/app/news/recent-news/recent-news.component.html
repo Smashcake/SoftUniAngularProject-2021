@@ -14,10 +14,10 @@
             </div>
             <div class="news-wrapper">
                 <p class="news-text">
-                    {{n.data.content}}
+                    {{n.data.content | shorten : 100 }}
                 </p>
                 <p class="news-information">
-                    <span class="date">{{n.data.createdOn}}</span>
+                    <span class="date">{{n.data.createdOn | localDate }}</span>
                     <span class="author">{{n.data.createdBy.name}} {{n.data.createdBy.surname}}</span>
                 </p>
             </div>

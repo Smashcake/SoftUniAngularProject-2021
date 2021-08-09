@@ -24,7 +24,6 @@ export class RecentNewsComponent {
           id: n.id
         }
       });
-      console.log(this.news);
     });
   }
   

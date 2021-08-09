@@ -2,7 +2,7 @@
     <div *ngIf="!editMode">
         <h2>{{newsDetail.title}}</h2>
         <p class="news-content">{{newsDetail.content}}</p>
-        <p class="news-date">{{newsDetail.createdOn}}</p>
+        <p class="news-date">{{newsDetail.createdOn | localDate }}</p>
         <p class="news-author">{{newsDetail.createdBy.name}} {{newsDetail.createdBy.surname}}</p>
         <button (click)="editMode = true">Edit</button>
     </div>

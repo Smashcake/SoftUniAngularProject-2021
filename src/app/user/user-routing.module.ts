@@ -1,4 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
+import { AuthActive } from '../core/auth-guard.guard';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
@@ -14,7 +15,12 @@ const routes: Routes = [
     },
     {
         path: 'profile/:id',
-        component: ProfileComponent
+        component: ProfileComponent,
+        canActivate: [AuthActive],
+        data: {
+            authenticationRequired: true,
+            authenticationFailureRedirectUrl: '/login',
+        }
     }
   ];
 
