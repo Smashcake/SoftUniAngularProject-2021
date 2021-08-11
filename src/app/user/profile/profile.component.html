@@ -1,31 +1,31 @@
 <div *ngIf="userId" class="profile-wrapper">
-    <div *ngIf="!editMode">
+    <div *ngIf="!editMode" class="set-profile-wrapper">
         <div>
-            <label for="name">Name</label>
-            <p>{{userProfile.name}}</p>
+            <label for="name" class="profile-key">Name</label>
+            <p class="profile-value">{{userProfile.name}}</p>
         </div>
         <div>
-            <label for="surname">Surname</label>
-            <p>{{userProfile.surname}}</p>
+            <label for="surname" class="profile-key">Surname</label>
+            <p class="profile-value">{{userProfile.surname}}</p>
         </div>
         <div>
-            <label for="email">Email</label>
-            <p>{{userProfile.email}}</p>
+            <label for="email" class="profile-key">Email</label>
+            <p class="profile-value">{{userProfile.email}}</p>
         </div>
         <button (click)="editMode = true">Edit</button>
     </div>
-    <div *ngIf="editMode">
-        <div class="name-wrapper">
-            <label for="name">Name</label>
-            <input #profileName type="text" ngModel="{{userProfile.name}}">
+    <div *ngIf="editMode" class="edit-wrapper">
+        <div>
+            <label for="name" class="edit-key">Name</label>
+            <input class="edit-value" #profileName type="text" ngModel="{{userProfile.name}}">
         </div>
-        <div class="surname-wrapper">
-            <label for="surname">Surname</label>
-            <input #profileSurname type="text" ngModel="{{userProfile.surname}}">
+        <div>
+            <label for="surname" class="edit-key">Surname</label>
+            <input class="edit-value" #profileSurname type="text" ngModel="{{userProfile.surname}}">
         </div>
-        <div class="email-wrapper">
-            <label for="email">Email</label>
-            <input #profileEmail type="email" ngModel="{{userProfile.email}}">
+        <div>
+            <label for="email" class="edit-key">Email</label>
+            <input class="edit-value" #profileEmail type="email" ngModel="{{userProfile.email}}">
         </div>
         <!-- <form #newPasswordForm="ngForm">
             <div class="form-group">
@@ -45,17 +45,17 @@
             </div>
         </form>        -->
         <button
-            (click)="saveProfile(profileName.value, profileSurname.value, profileEmail.value, userProfile.email, userId); editMode = false">Save</button>
-            <button (click)="editMode = false">Cancel</button>
+           class="save-btn" (click)="saveProfile(profileName.value, profileSurname.value, profileEmail.value, userProfile.email, userId); editMode = false">Save</button>
+        <button class="cancel-btn" (click)="editMode = false">Cancel</button>
     </div>
     <div *ngIf="userProfile.newsArticles" class="articles-wrapper">
         <ng-container>Your Articles:</ng-container>
         <div *ngFor="let article of userProfile.newsArticles">
-                <a [routerLink]="['/news-detail', article.id]" class="article-wrapper">
-                    <p>{{article.title}}</p>
-                    <p>{{article.content}}</p>
-                    <p>{{article.createdOn}}</p>
-                </a>
+            <a [routerLink]="['/news-detail', article.id]" class="article-wrapper">
+                <p>{{article.title}}</p>
+                <p>{{article.content}}</p>
+                <p>{{article.createdOn}}</p>
+            </a>
         </div>
     </div>
     <div *ngIf="userProfile.comments" class="comments-wrapper">

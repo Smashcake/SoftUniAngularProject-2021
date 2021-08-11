@@ -2,9 +2,11 @@
     <div *ngIf="!editMode">
         <h2>{{newsDetail.title}}</h2>
         <p class="news-content">{{newsDetail.content}}</p>
-        <p class="news-date">{{newsDetail.createdOn | localDate }}</p>
-        <p class="news-author">{{newsDetail.createdBy.name}} {{newsDetail.createdBy.surname}}</p>
-        <button (click)="editMode = true">Edit</button>
+        <div class="author-info">
+            <span class="news-date">{{newsDetail.createdOn | localDate }}</span>
+            <span class="news-author">Author: {{newsDetail.createdBy.name}} {{newsDetail.createdBy.surname}}</span>
+        </div>
+        <button (click)="editMode = true" class="edit-news-btn">Edit</button>
     </div>
     <div *ngIf="editMode">
         <form #editNewsForm="ngForm" class="form-wrapper" (ngSubmit)="saveArticle(editNewsForm, newsDetail.id)">
@@ -35,12 +37,12 @@
                         class="validation-error">Minimum requirement of 300 characters</div>
                 </div>
             </div>
-            <button [disabled]="editNewsForm.invalid" class="create-button">Save</button>
-            <button (click)="editMode = false">Cancel</button>
+            <button [disabled]="editNewsForm.invalid" class="save-btn">Save</button>
+            <button (click)="editMode = false" class="cancel-btn">Cancel</button>
         </form>
         <div>
-            <button *ngIf="userId === newsDetail.createdById && userId" (click)="deleteNews(newsDetail.id)">DELETE
-                ARTICLE</button>
+            <button *ngIf="userId === newsDetail.createdById && userId" (click)="deleteNews(newsDetail.id)">Delete
+                Article</button>
         </div>
     </div>
     <form class="comment-form" *ngIf="userId !== undefined && hasCommented === false" #commentForm="ngForm"
@@ -51,19 +53,19 @@
             <div *ngIf="commentInput.touched && commentInput.errors?.required" class="validator-error"></div>
         </div>
         <div>
-            <button><i class="far fa-comment"></i> Comment</button>
+            <button class="comment-btn"><i class="far fa-comment"></i> Comment</button>
         </div>
     </form>
     <div *ngIf="newsDetail.comments" class="news-comments">
         <div *ngFor="let comment of newsDetail.comments, let i = index">
             <div *ngIf="!commentEditMode" class="comment-wrapper">
+                <h4>{{comment.authorName}} {{comment.authorSurname}}</h4>
                 <p class="comment-content">{{comment.content}}</p>
-                <span>{{comment.authorName}} {{comment.authorSurname}}</span>
-                <span>{{comment.createdOn}}</span>
-                <button *ngIf="comment.authorId == userId"
+                <span>{{comment.createdOn | localDate}}</span>
+                <button class="edit-comment-btn" *ngIf="comment.authorId == userId"
                     (click)="commentEditMode = true;toggl === i ? toggl = null : toggl = i">Edit</button>
-                <button *ngIf="comment.authorId == userId"
-                    (click)="deleteComment(comment.id, newsDetail.id, userId)">DELETE</button>
+                <button class="delete-comment-btn" *ngIf="comment.authorId == userId"
+                    (click)="deleteComment(comment.id, newsDetail.id, userId)">Delete</button>
             </div>
             <div *ngIf="commentEditMode" class="comment-wrapper">
                 <div *ngIf="toggl === i">
@@ -77,5 +79,5 @@
         </div>
     </div>
     <div *ngIf="!newsDetail">Please wait while we load this news article.</div>
-    <button type="button" routerLink="/recent-news">Back to recent news</button>
+    <button class="home-btn" type="button" routerLink="/recent-news">Back</button>
 </div>

@@ -3,6 +3,46 @@
   color: black;
 }
 
-.validation-error{
-  color:red;
+.validation-error {
+  color: red;
+}
+
+.save-btn,
+.cancel-btn {
+  height: 30px;
+  width: 100px;
+  margin: 10px 0px;
+  cursor: pointer;
+  text-transform: uppercase;
+  border-radius: 6px;
+}
+
+.save-btn {
+  background-color: rgb(0, 180, 54);
+  color: white;
+}
+
+.cancel-btn {
+  background: darkred;
+  color: white;
+}
+
+.set-profile-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-key {
+  border: 1px solid black;
+  padding: 0px 20px;
+}
+
+.edit-wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

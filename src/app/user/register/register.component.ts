@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { IRegisterUser } from 'src/app/interfaces/register-user';
 import { UserService } from '../user.service';
@@ -11,13 +11,17 @@ import { Router } from '@angular/router';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent{
+export class RegisterComponent implements AfterViewInit{
 
   @ViewChild('passwordInput') passwordInput: ElementRef<HTMLInputElement>;
   @ViewChild('confirmPasswordInput') confirmPasswordInput: ElementRef<HTMLInputElement>;
 
 
   constructor(private userService: UserService, private auth: AngularFireAuth, private route: Router, private renderer: Renderer2) { }
+  ngAfterViewInit(): void {
+    this.renderer.setStyle(this.passwordInput.nativeElement, 'type', 'password');
+    this.renderer.setStyle(this.confirmPasswordInput.nativeElement, 'type', 'password');
+  }
 
   registerHandler(registerData: NgForm){
     if(registerData.invalid){
@@ -47,22 +51,20 @@ export class RegisterComponent{
   }
 
   togglePasswordVisibility(){
-    let element = this.passwordInput.nativeElement;
-    if (element.type === 'password'){
-      this.renderer.setAttribute(element, 'type' , 'text');
+    if (this.passwordInput.nativeElement.type === 'password'){
+      this.renderer.setAttribute(this.passwordInput.nativeElement, 'type' , 'text');
     }
     else {
-      this.renderer.setAttribute(element, 'type' , 'password');
+      this.renderer.setAttribute(this.passwordInput.nativeElement, 'type' , 'password');
     }
   }
 
   toggleConfirmPasswordVisibility(){
-    let element = this.confirmPasswordInput.nativeElement;
-    if (element.type === 'password'){
-      this.renderer.setAttribute(element, 'type' , 'text');
+    if (this.confirmPasswordInput.nativeElement.type === 'password'){
+      this.renderer.setAttribute(this.passwordInput.nativeElement, 'type' , 'text');
     }
     else {
-      this.renderer.setAttribute(element, 'type' , 'password');
+      this.renderer.setAttribute(this.passwordInput.nativeElement, 'type' , 'password');
     }
   }
 }
