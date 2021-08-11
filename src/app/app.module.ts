@@ -13,6 +13,7 @@ import { UserModule } from './user/user.module';
 import { NewsModule } from './news/news.module';
 import { environment } from 'src/environments/environment';
 import { UserService } from './user/user.service';
+import { SharedModule } from './shared/shared.module';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { UserService } from './user/user.service';
     NewsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
+    SharedModule
   ],
   providers: [
     NewsService,

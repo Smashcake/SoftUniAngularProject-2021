@@ -49,21 +49,21 @@
         <button class="cancel-btn" (click)="editMode = false">Cancel</button>
     </div>
     <div *ngIf="userProfile.newsArticles" class="articles-wrapper">
-        <ng-container>Your Articles:</ng-container>
-        <div *ngFor="let article of userProfile.newsArticles">
+        <h2 class="article-header">Your Articles:</h2>
+        <div *ngFor="let article of userProfile.newsArticles" class="article-content">
             <a [routerLink]="['/news-detail', article.id]" class="article-wrapper">
-                <p>{{article.title}}</p>
+                <h3>{{article.title}}</h3>
                 <p>{{article.content}}</p>
-                <p>{{article.createdOn}}</p>
+                <p>Published date: {{article.createdOn | localDate }}</p>
             </a>
         </div>
     </div>
     <div *ngIf="userProfile.comments" class="comments-wrapper">
-        <ng-container>Your Comments:</ng-container>
+        <h2>Your Comments:</h2>
         <div *ngFor="let comment of userProfile.comments">
             <div>
                 <p>{{comment.content}}</p>
-                <p>{{comment.createdOn}}</p>
+                <p>Commented on: {{comment.createdOn | localDate }}</p>
                 <button (click)="deleteComment(comment.id, comment.newsArticleId)">DELETE</button>
             </div>
         </div>

@@ -1,14 +1,15 @@
-<form #loginForm="ngForm" (ngSubmit)="loginHandler(loginForm)">
+<form #loginForm="ngForm" (ngSubmit)="loginHandler(loginForm)" class="form-wrapper">
     <div class="form-group">
-        <label for="email">Email</label>
-        <input #emailInput="ngModel" type="text" name="email" id="email" ngModel required>
+        <input #emailInput="ngModel" type="text" name="email" id="email" placeholder="Email" ngModel required>
         <div *ngIf="emailInput.touched && emailInput.errors?.required" class="validator-error">Email can't be blank</div>
     </div>
     <div class="form-group">
-        <label for="password">Password</label>
-        <input #passwordInput="ngModel" type="password" name="password" id="password" ngModel required [minlength]="6">
+        <input #passwordInput="ngModel" type="password" name="password" id="password" placeholder="Password" ngModel required [minlength]="6">
         <div *ngIf="passwordInput.touched && passwordInput.errors?.required" class="validator-error">Password can't be blank</div>
         <div *ngIf="passwordInput.touched && passwordInput.errors?.minlength" class="validator-error">Password can't be below 6 characters</div>
     </div>
-    <button [disabled]="loginForm.invalid">Login</button>
+    <button [disabled]="loginForm.invalid" class="login-btn">Login</button>
+    <p class="register">
+        Don't have an account yet? <a routerLink="/register" class="register-link">Sign up for free</a>
+    </p>
 </form>

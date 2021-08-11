@@ -136,6 +136,11 @@ h2 {
   margin-bottom: 10px;
 }
 
+.comment-wrapper * {
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
 .comment-form {
   margin-bottom: 30px;
 }
@@ -188,4 +193,9 @@ h2 {
   color: white;
   background: darkgray;
   border-radius: 20px;
+}
+
+.comment-content{
+  padding-bottom: 20px;
+  margin-top: 0px;
 }

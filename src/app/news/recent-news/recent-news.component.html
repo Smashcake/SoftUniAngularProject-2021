@@ -17,8 +17,8 @@
                     {{n.data.content | shorten : 100 }}
                 </p>
                 <p class="news-information">
-                    <span class="date">{{n.data.createdOn | localDate }}</span>
-                    <span class="author">{{n.data.createdBy.name}} {{n.data.createdBy.surname}}</span>
+                    <span class="date">Published date: {{n.data.createdOn | localDate }}</span>
+                    <span class="author">Author: {{n.data.createdBy.name}} {{n.data.createdBy.surname}}</span>
                 </p>
             </div>
         </div>

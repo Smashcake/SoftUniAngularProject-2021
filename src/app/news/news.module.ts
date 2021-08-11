@@ -5,9 +5,8 @@ import { CreateNewsComponent } from './create-news/create-news.component';
 import { RecentNewsComponent } from './recent-news/recent-news.component';
 import { FormsModule } from '@angular/forms';
 import { NewsDetailComponent } from './news-detail/news-detail.component';
-import { ShortenPipe } from '../shared/pipes/shorten.pipe';
-import { LocalDatePipe } from '../shared/pipes/local-date.pipe';
 import { AuthActive } from '../core/auth-guard.guard';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -15,14 +14,13 @@ import { AuthActive } from '../core/auth-guard.guard';
   declarations: [
     CreateNewsComponent,
     RecentNewsComponent,
-    NewsDetailComponent,
-    ShortenPipe,
-    LocalDatePipe,
+    NewsDetailComponent
   ],
   imports: [
     CommonModule,
     NewsRoutingModule,
-    FormsModule
+    FormsModule,
+    SharedModule
   ],
   providers: [
     AuthActive
