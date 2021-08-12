@@ -41,7 +41,7 @@
             <button (click)="editMode = false" class="cancel-btn">Cancel</button>
         </form>
         <div>
-            <button *ngIf="userId === newsDetail.createdById && userId" (click)="deleteNews(newsDetail.id)">Delete
+            <button class="delete-article-btn" *ngIf="userId === newsDetail.createdById && userId" (click)="deleteNews(newsDetail.id)">Delete
                 Article</button>
         </div>
     </div>
@@ -72,8 +72,8 @@
                     <textarea #commentEditedContent type="text" class="comment-content" id="comment"
                         [ngModel]="comment.content"></textarea>
                     <button
-                        (click)="saveComment(commentEditedContent.value, comment.id, newsDetail.id, userId);commentEditMode = false;toggl === i ? toggl = null : toggl = i">Save</button>
-                        <button (click)="commentEditMode = false;toggl === i ? toggl = null : toggl = i">Cancel</button>
+                        class="save-btn" (click)="saveComment(commentEditedContent.value, comment.id, newsDetail.id, userId);commentEditMode = false;toggl === i ? toggl = null : toggl = i">Save</button>
+                        <button class="cancel-btn" (click)="commentEditMode = false;toggl === i ? toggl = null : toggl = i">Cancel</button>
                 </div>
             </div>
         </div>

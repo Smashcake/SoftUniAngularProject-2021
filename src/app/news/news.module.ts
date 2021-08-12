@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { NewsDetailComponent } from './news-detail/news-detail.component';
 import { AuthActive } from '../core/auth-guard.guard';
 import { SharedModule } from '../shared/shared.module';
+import { NewsPaginationComponent } from './news-pagination/news-pagination.component';
+
 
 
 
@@ -14,13 +16,14 @@ import { SharedModule } from '../shared/shared.module';
   declarations: [
     CreateNewsComponent,
     RecentNewsComponent,
-    NewsDetailComponent
+    NewsDetailComponent,
+    NewsPaginationComponent
   ],
   imports: [
     CommonModule,
     NewsRoutingModule,
     FormsModule,
-    SharedModule
+    SharedModule,
   ],
   providers: [
     AuthActive

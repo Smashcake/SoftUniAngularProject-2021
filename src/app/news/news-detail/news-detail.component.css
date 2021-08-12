@@ -116,7 +116,6 @@ h2 {
 }
 
 .edit-news-btn {
-  background-color: #006ae3;
   border-radius: 50px;
   height: 50px;
   width: 120px;
@@ -156,7 +155,8 @@ h2 {
 }
 
 .save-btn,
-.cancel-btn {
+.cancel-btn,
+.delete-article-btn {
   height: 30px;
   width: 100px;
   margin: 10px 0px;
@@ -165,27 +165,29 @@ h2 {
   border-radius: 6px;
 }
 
-.save-btn{
+.save-btn {
   background-color: rgb(0, 180, 54);
-  color:white;
+  color: white;
 }
 
-.edit-comment-btn,.delete-comment-btn {
+.edit-comment-btn,
+.delete-comment-btn {
   height: 25px;
   width: 70px;
   text-transform: uppercase;
   margin: 0px 20px;
-  background: #006ae3;
   border-radius: 10px;
   cursor: pointer;
 }
 
-.delete-comment-btn,.cancel-btn{
+.delete-comment-btn,
+.cancel-btn,
+.delete-article-btn {
   background: darkred;
-  color:white
+  color: white;
 }
 
-.home-btn{
+.home-btn {
   cursor: pointer;
   height: 30px;
   width: 150px;
@@ -195,7 +197,8 @@ h2 {
   border-radius: 20px;
 }
 
-.comment-content{
+.comment-content {
   padding-bottom: 20px;
   margin-top: 0px;
 }
+

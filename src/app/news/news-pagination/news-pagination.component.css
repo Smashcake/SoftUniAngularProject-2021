@@ -1,0 +1,33 @@
+.pagination__container{
+    width: 300px;
+    margin:20px auto;
+    display: flex;
+}
+
+.pagination__button{
+    padding:10px;
+    background: rgb(39, 192, 34);
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 5px;
+    margin:0px 10px;
+}
+
+.pagination__page-active{
+    display: flex;
+}
+
+.pagination__page-active span{
+    padding:10px;
+}
+
+.pagination__page-active input{
+    height:32px;
+    width:40px
+}
+
+.pagination__button--disabled{
+    cursor: not-allowed;
+    pointer-events: none;
+    background: gray;
+}

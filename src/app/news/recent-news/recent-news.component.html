@@ -1,27 +1,28 @@
 <article class="recent-news">
     <h2>Recent news</h2>
-    <div class="recent-news-list" *ngFor="let n of news">
+    <div class="recent-news-list" *ngFor="let news of displayedData">
         <div class="news-cover-wrapper">
             <img src="../../assets/placeholder-image-300x225.png" alt="News cover" class="news-cover">
         </div>
         <div class="news-content">
             <div class="news-name">
-                <a [routerLink]="['/news-detail', n?.id]" class="news-title">
+                <a [routerLink]="['/news-detail', news?.id]" class="news-title">
                     <h3>
-                        {{n.data.title}}
+                        {{news.data.title}}
                     </h3>
                 </a>
             </div>
             <div class="news-wrapper">
                 <p class="news-text">
-                    {{n.data.content | shorten : 100 }}
+                    {{news.data.content | shorten : 100 }}
                 </p>
                 <p class="news-information">
-                    <span class="date">Published date: {{n.data.createdOn | localDate }}</span>
-                    <span class="author">Author: {{n.data.createdBy.name}} {{n.data.createdBy.surname}}</span>
+                    <span class="date">Published date: {{news.data.createdOn | localDate }}</span>
+                    <span class="author">Author: {{news.data.createdBy.name}} {{news.data.createdBy.surname}}</span>
                 </p>
             </div>
         </div>
     </div>
+    <app-pagination [allPagesNumber]="allPages" (changePage)="onPageChange($event)"></app-pagination>
     <div *ngIf="!news">Loading recent news,please wait.</div>
 </article>
