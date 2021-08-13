@@ -3,8 +3,11 @@
         <h2>{{newsDetail.title}}</h2>
         <p class="news-content">{{newsDetail.content}}</p>
         <div class="author-info">
-            <span class="news-date">Published date: {{newsDetail.createdOn | localDate }}</span>
-            <span class="news-author">Author: {{newsDetail.createdBy.name}} {{newsDetail.createdBy.surname}}</span>
+            <span class="news-category">Category: {{newsDetail.category}}</span>
+            <span>
+                <span class="news-date">Published date: {{newsDetail.createdOn | localDate }}</span>
+                <span class="news-author">Author: {{newsDetail.createdBy.name}} {{newsDetail.createdBy.surname}}</span>
+            </span>
         </div>
         <button (click)="editMode = true" class="edit-news-btn">Edit</button>
     </div>

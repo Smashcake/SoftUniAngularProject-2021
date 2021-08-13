@@ -5,17 +5,29 @@
                 <label for="title-wrapper">Title</label>
                 <input #titleInput="ngModel" type="text" name="title" id="title" ngModel required [minlength]="4">
             </div>
-            <div *ngIf="titleInput.touched && titleInput.errors?.required" class="validation-error">A title is required</div>
-            <div *ngIf="titleInput.touched && titleInput.errors?.minlength" class="validation-error">Minimum title length of 4 characters</div>
-        </div> 
+            <div *ngIf="titleInput.touched && titleInput.errors?.required" class="validation-error">A title is required
+            </div>
+            <div *ngIf="titleInput.touched && titleInput.errors?.minlength" class="validation-error">Minimum title
+                length of 4 characters</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="category">
+            <label for="category-wrapper">Category</label>
+            <select #categoryInput="ngModel" name="category" id="category" class="filter-list" #option ngModel required>
+                <option *ngFor="let category of categories">{{category.name}}
+            </select>
+        </div>
     </div>
     <div class="form-group">
         <div class="content-wrapper">
             <div class="content">
                 <label for="newsText">Text</label>
-                <textarea #contentInput="ngModel" type="text" name="content" id="content" ngModel required minlength="300"></textarea>
+                <textarea #contentInput="ngModel" type="text" name="content" id="content" ngModel required
+                    minlength="300"></textarea>
             </div>
-            <div *ngIf="contentInput.touched && contentInput.errors?.required || contentInput.errors?.minlength" class="validation-error">Minimum requirement of 300 characters</div>
+            <div *ngIf="contentInput.touched && contentInput.errors?.required || contentInput.errors?.minlength"
+                class="validation-error">Minimum requirement of 300 characters</div>
         </div>
     </div>
     <button [disabled]="newNewsForm.invalid" class="create-button">CREATE</button>

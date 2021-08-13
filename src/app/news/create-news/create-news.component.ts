@@ -16,6 +16,7 @@ export class CreateNewsComponent implements OnInit {
 
   newsCall = 'News';
   userId: string;
+  categories = [];
 
   constructor(private newsService: NewsService, private route: Router, private auth: AngularFireAuth, private userService: UserService) {
     this.auth.authState.subscribe(user => {
@@ -24,6 +25,13 @@ export class CreateNewsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.newsService.loadCategories().get().subscribe(category => {
+      this.categories = category.docs.map(category => {
+        return {
+          name: category.data().name
+        };
+      })
+    });
   }
 
   createNews(newsData: NgForm) {
@@ -43,7 +51,8 @@ export class CreateNewsComponent implements OnInit {
       } as IRegisterUser,
       content: formInput.content,
       createdById: this.userId,
-      id: ''
+      id: '',
+      category: formInput.category
     }
     
     this.userService.getUserData(this.userId).get().subscribe(userData => {

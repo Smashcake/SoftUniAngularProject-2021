@@ -55,7 +55,10 @@
                 <div class="inner-article-wrapper">
                     <h3>{{article.title}}</h3>
                     <p>{{article.content}}</p>
-                    <p>Published date: {{article.createdOn | localDate }}</p>
+                    <p class="article-info">
+                        <span>Category: {{article.category}}</span>
+                        <span>Published date: {{article.createdOn | localDate }}</span>
+                    </p>
                 </div>
             </a>
         </div>

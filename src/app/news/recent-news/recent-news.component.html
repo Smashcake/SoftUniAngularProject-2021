@@ -1,4 +1,12 @@
 <article class="recent-news">
+    <div class="filter-selection">
+        <span class="filter-header">Category filter:</span>
+        <select class="filter-list" #option>
+            <option *ngFor="let category of categories">{{category.name}}
+        </select>
+        <button class="special-btn" (click)="addFilter()">Filter</button>
+        <button class="special-btn" (click)="clearFilter()">Clear</button>
+    </div>
     <h2>Recent news</h2>
     <div class="recent-news-list" *ngFor="let news of displayedData">
         <div class="news-cover-wrapper">
@@ -23,6 +31,6 @@
             </div>
         </div>
     </div>
-    <app-pagination [allPagesNumber]="allPages" (changePage)="onPageChange($event)"></app-pagination>
+    <app-pagination [allPagesNumber]="allPages" (changePage)="onPageChange($event,false)"></app-pagination>
     <div *ngIf="!news">Loading recent news,please wait.</div>
 </article>

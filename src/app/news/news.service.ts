@@ -9,6 +9,7 @@ export class NewsService {
 
   newsCall: string = "news";
   comments: string = "comments";
+  categories: string = "categories";
 
   constructor(private firestore: AngularFirestore, private userService: UserService) { }
 
@@ -107,5 +108,9 @@ export class NewsService {
       }
     });
     return this.firestore.collection(this.comments).doc(commentId).update({ content: newContent });
+  }
+
+  loadCategories(): AngularFirestoreCollection{
+    return this.firestore.collection(this.categories);
   }
 }

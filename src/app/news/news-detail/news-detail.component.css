@@ -103,7 +103,7 @@ h2 {
 
 .author-info {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .author-info span {
@@ -202,3 +202,7 @@ h2 {
   margin-top: 0px;
 }
 
+.news-category {
+  font-size: 22px;
+  font-family: Verdana, sans-serif;
+}

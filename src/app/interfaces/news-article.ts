@@ -7,5 +7,6 @@ export interface INewsArticle {
     comments: [],
     content: string,
     createdOn: Date,
-    id: string
+    id: string,
+    category: string
 }

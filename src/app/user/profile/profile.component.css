@@ -126,3 +126,8 @@
   text-decoration: none;
   color: black;
 }
+
+.article-info{
+  display:flex;
+  justify-content: space-between;
+}
