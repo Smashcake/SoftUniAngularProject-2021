@@ -5,8 +5,8 @@
   background: #98e2fb;
 }
 
-.header-logo-wrapper{
-  margin-left:10px;
+.header-logo-wrapper {
+  margin-left: 10px;
 }
 
 .header-navigation-list,
@@ -26,6 +26,6 @@
   font-size: 20px;
 }
 
-.special{
+.special {
   cursor: pointer;
 }

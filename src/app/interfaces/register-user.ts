@@ -5,6 +5,7 @@ export interface IRegisterUser {
     password: string,
     confirmPassword: string,
     createdOn: Date,
+    role: string,
     comments: [],
     newsArticles: [],
 }

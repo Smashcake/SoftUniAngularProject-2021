@@ -7,7 +7,7 @@ import { RegisterComponent } from './register/register.component';
 const routes: Routes = [
     {
         path: 'login',
-        component : LoginComponent
+        component: LoginComponent
     },
     {
         path: 'register',
@@ -20,9 +20,10 @@ const routes: Routes = [
         data: {
             authenticationRequired: true,
             authenticationFailureRedirectUrl: '/login',
+            authenticationRole: ['user', 'journalist', 'admin']
         }
     }
-  ];
+];
 
 
 export const UserRoutingModule = RouterModule.forChild(routes);

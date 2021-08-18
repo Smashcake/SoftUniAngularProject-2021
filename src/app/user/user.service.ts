@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { IRegisterUser } from '../interfaces/register-user';
@@ -12,15 +12,22 @@ export class UserService {
   userCall = "users";
 
   isLogged: boolean;
+  userRole: string;
 
 
   constructor(private fireAuth: AngularFireAuth, private firestore: AngularFirestore) {
     this.fireAuth.onAuthStateChanged((user) => {
       if (user === null) {
         this.isLogged = false;
+        this.userRole = '';
+        console.log(this.userRole);
       }
       else {
         this.isLogged = true;
+        this.getUserData(user.uid).get().subscribe((user) => {
+          this.userRole = user?.data()?.role;
+          console.log(this.userRole);
+        })
       }
     })
   }
@@ -113,5 +120,6 @@ export class UserService {
       this.getUserData(userId).update({ comments: comments });
     });
   }
+
 }
 

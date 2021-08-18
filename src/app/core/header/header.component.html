@@ -10,8 +10,11 @@
                 <li class="header-navigation-item">
                     <a [routerLink]="['/profile', userId]" class="navigation-item">Profile</a>
                 </li>
-                <li class="header-navigation-item">
+                <li *ngIf="this.userService.userRole == 'journalist' || this.userService.userRole == 'admin'" class="header-navigation-item">
                     <a routerLink="/create-news" class="navigation-item">Create news</a>
+                </li>
+                <li *ngIf="this.userService.userRole == 'user'" class="header-navigation-item">
+                    <a [routerLink]="['/profile', userId]" class="navigation-item">Become a journalist</a>
                 </li>
                 <li class="header-navigation-item">
                     <a routerLink="/recent-news" class="navigation-item">Recent-news</a>

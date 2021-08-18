@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserService } from '../user/user.service';
@@ -12,10 +11,11 @@ export class AuthActive implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const { authenticationRequired, authenticationFailureRedirectUrl } = route.data;
+    const { authenticationRequired, authenticationFailureRedirectUrl, authenticationRole } = route.data;
     if (
       typeof authenticationRequired === 'boolean' &&
-      authenticationRequired === this.userService.isLogged
+      authenticationRequired === this.userService.isLogged &&
+      authenticationRole.includes(this.userService.userRole)
     ) { return true; }
 
     let authRedirectUrl = authenticationFailureRedirectUrl;

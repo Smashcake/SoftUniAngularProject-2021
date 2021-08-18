@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/user/user.service';
@@ -22,9 +22,9 @@ export class HeaderComponent {
 
   logoutHandler() {
     this.userService.logoutUser()
-    .then(x => {
-      this.route.navigateByUrl("/login");
-    });
+      .then(x => {
+        this.route.navigateByUrl("/login");
+      });
   }
 
 }

@@ -31,6 +31,7 @@ export class RegisterComponent implements AfterViewInit{
     userInput.newsArticles = [];
     userInput.comments = [];
     userInput.createdOn = new Date();
+    userInput.role = 'user';
     if(userInput.name === ''  || userInput.surname === '' || userInput.email === '' || userInput.password === '' || userInput.password === ''){
       return "sneaky sneaky mr.hacker";
     }

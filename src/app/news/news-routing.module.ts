@@ -14,7 +14,7 @@ const routes: Routes = [
         path: 'recent-news',
         component: RecentNewsComponent
     },
-    {   
+    {
         path: 'news-detail/:id',
         component: NewsDetailComponent
     },
@@ -25,8 +25,9 @@ const routes: Routes = [
         data: {
             authenticationRequired: true,
             authenticationFailureRedirectUrl: '/login',
+            authenticationRole: ['journalist', 'admin']
         }
-    },   
-  ];
+    },
+];
 
 export const NewsRoutingModule = RouterModule.forChild(routes);
