@@ -1,0 +1,16 @@
+<div *ngIf="applicants" class="main-wrapper">
+    <div *ngFor="let applicant of applicants" class="applicants-list">
+        <div class="user-info">
+            <span class="user-name">Name: {{applicant.name}}</span>
+            <span class="user-surname">Surname: {{applicant.surname}}</span>
+        </div>
+        <div class="action-btns">
+            <button class="accept-btn" (click)="applicantDecision(true, applicant.userId, applicant.docId)">
+                Accept
+            </button>
+            <button class="decline-btn" (click)="applicantDecision(false, applicant.userId, applicant.docId)">
+                Decline
+            </button>
+        </div>
+    </div>
+</div>

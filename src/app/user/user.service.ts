@@ -1,18 +1,21 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { IRegisterUser } from '../interfaces/register-user';
 import { ILoginUser } from '../interfaces/login-user';
 import { IComment } from '../interfaces/comment';
 import { INewsArticle } from '../interfaces/news-article';
+import { IJournalistApplicant } from '../interfaces/journalist-applicant';
 
 @Injectable()
 export class UserService {
 
-  userCall = "users";
+  userCall: string = "users";
+  journalistApplicantCall: string = "journalistApplicants";
 
   isLogged: boolean;
   userRole: string;
+  journalistApplicants: any[] | undefined;
 
 
   constructor(private fireAuth: AngularFireAuth, private firestore: AngularFirestore) {
@@ -20,13 +23,11 @@ export class UserService {
       if (user === null) {
         this.isLogged = false;
         this.userRole = '';
-        console.log(this.userRole);
       }
       else {
         this.isLogged = true;
         this.getUserData(user.uid).get().subscribe((user) => {
           this.userRole = user?.data()?.role;
-          console.log(this.userRole);
         })
       }
     })
@@ -121,5 +122,26 @@ export class UserService {
     });
   }
 
+  applyForJournalist(userId: string, user: IJournalistApplicant) {
+    this.journalistApplicants = [];
+    this.firestore.collection(this.journalistApplicantCall).get().subscribe(journalistApplicantsCollection => {
+      this.journalistApplicants = journalistApplicantsCollection.docs.map(applicant => {
+        return {
+          data: applicant.data()
+        }
+      })
+      let journalistApplicant = this.journalistApplicants.find(x => x.data.userId == userId);
+      if (journalistApplicant === undefined && user.role === 'user') {
+        this.firestore.collection(this.journalistApplicantCall).add(user).then(docRef => { 
+          this.firestore.collection(this.journalistApplicantCall).doc(docRef.id).update({ docId: docRef.id});
+        });
+        window.alert("Successful application.");
+      }
+      else {
+        window.alert("You already have an application");
+        return;
+      }
+    })
+  }
 }
 

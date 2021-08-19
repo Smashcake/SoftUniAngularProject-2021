@@ -41,6 +41,10 @@ export class CreateNewsComponent implements OnInit {
 
     let formInput = newsData.value;
 
+    if (formInput.category == '') {
+      formInput.category = 'Business';
+    }
+
     let news: INewsArticle = {
       title: formInput.title,
       createdOn: new Date(),
@@ -52,9 +56,10 @@ export class CreateNewsComponent implements OnInit {
       content: formInput.content,
       createdById: this.userId,
       id: '',
-      category: formInput.category
+      category: formInput.category,
+      approved: false
     }
-    
+
     this.userService.getUserData(this.userId).get().subscribe(userData => {
       news.createdBy.name = userData.data()?.name;
       news.createdBy.surname = userData.data()?.surname;

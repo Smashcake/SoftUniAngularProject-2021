@@ -14,6 +14,8 @@ import { NewsModule } from './news/news.module';
 import { environment } from 'src/environments/environment';
 import { UserService } from './user/user.service';
 import { SharedModule } from './shared/shared.module';
+import { AdminModule } from './admin/admin.module';
+import { AdminService } from './admin/admin.service';
 
 
 @NgModule({
@@ -30,11 +32,13 @@ import { SharedModule } from './shared/shared.module';
     NewsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
-    SharedModule
+    SharedModule,
+    AdminModule
   ],
   providers: [
     NewsService,
-    UserService
+    UserService,
+    AdminService
   ],
   bootstrap: [AppComponent]
 })

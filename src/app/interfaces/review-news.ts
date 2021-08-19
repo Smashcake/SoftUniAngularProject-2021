@@ -1,10 +1,9 @@
 import { IRegisterUser } from "./register-user";
 
-export interface INewsArticle {
+export interface IReviewNews {
     title: string,
     createdBy: IRegisterUser,
     createdById: string,
-    comments: [],
     content: string,
     createdOn: Date,
     id: string,

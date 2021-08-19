@@ -1,0 +1,31 @@
+<article class="review-news">
+    <div *ngIf="newsToReview">
+        <div *ngFor="let news of newsToReview" class="review-news-list">
+            <div class="news-cover-wrapper">
+                <img src="../../assets/placeholder-image-300x225.png" alt="News cover" class="news-cover">
+            </div>
+            <div class="news-content">
+                <div class="news-name">
+                    <a class="news-title">
+                        <h3>
+                            {{news.title}}
+                        </h3>
+                    </a>
+                </div>
+                <div class="news-wrapper">
+                    <p class="news-text">
+                        {{news.content}}
+                    </p>
+                    <p class="news-information">
+                        <span class="date">Published date: {{news.createdOn | localDate }}</span>
+                        <span class="author">Author: {{news.createdBy.name}} {{news.createdBy.surname}}</span>
+                    </p>
+                </div>
+                <div class="buttons-wrapper">
+                    <button class="accept-btn" (click)="newsAcceptionHandler(true, news.id, news.createdById)">Accept</button>
+                    <button class="decline-btn" (click)="newsAcceptionHandler(false, news.id, news.createdById)">Decline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>

@@ -9,7 +9,8 @@
                 <span class="news-author">Author: {{newsDetail.createdBy.name}} {{newsDetail.createdBy.surname}}</span>
             </span>
         </div>
-        <button (click)="editMode = true" class="edit-news-btn">Edit</button>
+        <button *ngIf="(userId === newsDetail.createdById && userId) || this.userService.userRole == 'admin'"
+            (click)="editMode = true" class="edit-news-btn">Edit</button>
     </div>
     <div *ngIf="editMode">
         <form #editNewsForm="ngForm" class="form-wrapper" (ngSubmit)="saveArticle(editNewsForm, newsDetail.id)">
@@ -30,6 +31,14 @@
                 </div>
             </div>
             <div class="form-group">
+                <div class="category">
+                    <label for="category-wrapper">Category</label>
+                    <select #categoryInput="ngModel" name="category" id="category" class="filter-list" #option ngModel>
+                        <option *ngFor="let category of categories">{{category.name}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="content-wrapper">
                     <div class="content">
                         <label for="newsText">Text</label>
@@ -44,10 +53,11 @@
             <button (click)="editMode = false" class="cancel-btn">Cancel</button>
         </form>
         <div>
-            <button class="delete-article-btn" *ngIf="userId === newsDetail.createdById && userId" (click)="deleteNews(newsDetail.id)">Delete
+            <button class="delete-article-btn" (click)="deleteNews(newsDetail.id)">Delete
                 Article</button>
         </div>
     </div>
+    <button *ngIf="userId" class="report-news-btn" (click)="reportNewsHandler(newsDetail.id, userId)">Report <i class="fas fa-flag"></i></button>
     <form class="comment-form" *ngIf="userId !== undefined && hasCommented === false" #commentForm="ngForm"
         (ngSubmit)="commentHandler(commentForm, newsDetail.id)">
         <div class="form-group">
@@ -65,18 +75,20 @@
                 <h4>{{comment.authorName}} {{comment.authorSurname}}</h4>
                 <p class="comment-content">{{comment.content}}</p>
                 <span>Commented on: {{comment.createdOn | localDate}}</span>
-                <button class="edit-comment-btn" *ngIf="comment.authorId == userId"
+                <button class="edit-comment-btn" *ngIf="(comment.authorId == userId)"
                     (click)="commentEditMode = true;toggl === i ? toggl = null : toggl = i">Edit</button>
-                <button class="delete-comment-btn" *ngIf="comment.authorId == userId"
+                <button class="delete-comment-btn"
+                    *ngIf="comment.authorId == userId  || this.userService.userRole =='admin'"
                     (click)="deleteComment(comment.id, newsDetail.id, userId)">Delete</button>
             </div>
             <div *ngIf="commentEditMode" class="comment-wrapper">
                 <div *ngIf="toggl === i">
                     <textarea #commentEditedContent type="text" class="comment-content" id="comment"
                         [ngModel]="comment.content"></textarea>
-                    <button
-                        class="save-btn" (click)="saveComment(commentEditedContent.value, comment.id, newsDetail.id, userId);commentEditMode = false;toggl === i ? toggl = null : toggl = i">Save</button>
-                        <button class="cancel-btn" (click)="commentEditMode = false;toggl === i ? toggl = null : toggl = i">Cancel</button>
+                    <button class="save-btn"
+                        (click)="saveComment(commentEditedContent.value, comment.id, newsDetail.id, userId);commentEditMode = false;toggl === i ? toggl = null : toggl = i">Save</button>
+                    <button class="cancel-btn"
+                        (click)="commentEditMode = false;toggl === i ? toggl = null : toggl = i">Cancel</button>
                 </div>
             </div>
         </div>

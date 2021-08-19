@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IComment } from 'src/app/interfaces/comment';
+import { IUserReport } from 'src/app/interfaces/user-report';
 import { UserService } from 'src/app/user/user.service';
 import { NewsService } from '../news.service';
 
@@ -18,6 +19,7 @@ export class NewsDetailComponent {
   newsDetail: any | undefined;
   totalNews: any;
   hasCommented: boolean;
+  categories: any[];
 
   newsId: string = this.getNewsId();
 
@@ -25,6 +27,16 @@ export class NewsDetailComponent {
     this.getNewsData();
     this.auth.authState.subscribe(user => {
       this.userId = user?.uid ? user.uid : undefined;
+    });
+  }
+
+  ngOnInit(): void {
+    this.newsService.loadCategories().get().subscribe(category => {
+      this.categories = category.docs.map(category => {
+        return {
+          name: category.data().name
+        };
+      })
     });
   }
 
@@ -39,20 +51,20 @@ export class NewsDetailComponent {
       this.newsDetail.createdOn = this.newsDetail.createdOn;
       let userComments = [];
       userComments = this.newsDetail.comments;
-      if (!userComments.find(x => x.authorId === this.userId)){
+      if (!userComments.find(x => x.authorId === this.userId)) {
         this.hasCommented = false;
       }
-      else{
+      else {
         this.hasCommented = true;
       }
     });
-    
+
   }
 
   deleteNews(id: string) {
     this.newsService.deleteNews(id, this.userId).then(x => {
       setTimeout(() => this.route.navigateByUrl(''), 200)
-    }); 
+    });
   }
 
   commentHandler(commentData: NgForm, articleId: string) {
@@ -78,7 +90,7 @@ export class NewsDetailComponent {
         this.newsService.addCommentToNewsArticle(articleId, commentInfo);
         this.userService.addCommentToUserComments(this.userId, commentInfo)
       }).then(y => {
-        setTimeout(() => this.redirectTo(`news-detail/${articleId}`), 200);       
+        setTimeout(() => this.redirectTo(`news-detail/${articleId}`), 200);
       });
     });
 
@@ -94,14 +106,14 @@ export class NewsDetailComponent {
       this.route.navigate([uri]));
   }
 
-  deleteComment(commentId: string, newsArticleId: string, userId: string){
+  deleteComment(commentId: string, newsArticleId: string, userId: string) {
     this.newsService.deleteComment(commentId, newsArticleId, userId).then(x => {
       setTimeout(() => this.redirectTo(`news-detail/${newsArticleId}`), 200);
     });
   }
 
-  saveArticle(newsData: NgForm, newsId: string){
-    if (newsData.invalid){
+  saveArticle(newsData: NgForm, newsId: string) {
+    if (newsData.invalid) {
       return;
     }
     this.userService.editUserArticle(newsData.value, newsId, this.userId);
@@ -110,11 +122,44 @@ export class NewsDetailComponent {
     });
   }
 
-  saveComment(content: string,commentId: string, newsArticleId: string, userId: string){
+  saveComment(content: string, commentId: string, newsArticleId: string, userId: string) {
     this.userService.editUserComment(commentId, userId, content);
     this.newsService.editArticleComment(newsArticleId, commentId, content).then(x => {
       setTimeout(() => this.redirectTo(`news-detail/${newsArticleId}`), 200, 200);
     });
+  }
+
+  reportNewsHandler(newsId: string, userId: string) {
+    if (window.confirm("Are you sure you want to report this news article?")) {
+      let newsReports: IUserReport[] = [];
+      let userReport: IUserReport = {
+        name: '',
+        surname: '',
+        userId: '',
+        reportDate: new Date()
+      };
+      this.newsService.loadNewsData(newsId).get().subscribe(newsData => {
+        newsReports = newsData?.data()?.reports;
+        this.userService.getUserData(userId).get().subscribe(userData => {
+          userReport.name = userData?.data()?.name;
+          userReport.surname = userData?.data()?.surname;
+          userReport.userId = userId;
+          newsReports.push(userReport);
+          this.newsService.loadNewsData(newsId).update({ reports: newsReports })
+          .then(x => {
+            let newsReportsLength: number = 0;
+            this.newsService.loadNewsData(newsId).get().subscribe(news => {
+              newsReportsLength = news?.data()?.reports.length;
+              if (newsReportsLength >= 3) {
+                this.newsService.loadNewsData(newsId).update({ approved: false })
+              };
+            })
+          }).then(y => {
+            setTimeout(() => this.redirectTo(`news-detail/${newsId}`), 200, 200);
+          });
+        });
+      });
+    };
   }
 }
 

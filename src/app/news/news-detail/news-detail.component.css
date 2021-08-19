@@ -206,3 +206,25 @@ h2 {
   font-size: 22px;
   font-family: Verdana, sans-serif;
 }
+
+.filter-list {
+  margin: 0px 10px;
+  font-size: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px 1px lightgrey;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.category-wrapper {
+  font-size: 20px;
+  padding-right: 10px;
+}
+
+.report-news-btn {
+  text-transform: uppercase;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}

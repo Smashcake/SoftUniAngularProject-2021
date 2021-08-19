@@ -1,0 +1,43 @@
+.main-wrapper {
+  margin: 20px auto;
+  width: 90%;
+}
+
+.applicants-list {
+  display: flex;
+  justify-content: space-between;
+  padding: 25px;
+  box-shadow: 0px 0px 8px 2px #98e2fb;
+  border: 1px solid lightgray;
+  border-radius: 6px;
+  align-items: center;
+}
+
+.user-info {
+  font-size: 18px;
+}
+
+.user-name,
+.user-surname {
+  padding: 10px;
+}
+
+.accept-btn,
+.decline-btn {
+  text-transform: uppercase;
+  padding: 10px;
+  margin: 0px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.accept-btn {
+  background-color: rgb(0, 180, 54);
+  color: white;
+}
+
+.decline-btn {
+  background: darkred;
+  color: white;
+}

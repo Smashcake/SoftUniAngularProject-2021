@@ -37,6 +37,7 @@ export class RecentNewsComponent {
           };
         })
       });
+      this.news = this.news.filter(x => x?.data.approved === true);
       this.news.sort((x, y) => y?.data.createdOn.seconds - x?.data.createdOn.seconds);
       this.onPageChange(1,false);
       this.allPages = Math.ceil(this.news.length / this.itemsPerPage);

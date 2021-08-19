@@ -7,14 +7,21 @@
     <article class="header-navigation">
         <ul class="header-navigation-list">
             <div *ngIf="isLogged" class="logged-Nav-Items">
+                <li *ngIf="this.userService.userRole == 'admin'" class="header-navigation-item">
+                    <a [routerLink]="['/review-news']" class="navigation-item">Review news</a>
+                </li>
+                <li *ngIf="this.userService.userRole == 'admin'" class="header-navigation-item">
+                    <a [routerLink]="['/journalist-applications']" class="navigation-item">Journalist applications</a>
+                </li>
                 <li class="header-navigation-item">
                     <a [routerLink]="['/profile', userId]" class="navigation-item">Profile</a>
                 </li>
-                <li *ngIf="this.userService.userRole == 'journalist' || this.userService.userRole == 'admin'" class="header-navigation-item">
+                <li *ngIf="this.userService.userRole == 'journalist' || this.userService.userRole == 'admin'"
+                    class="header-navigation-item">
                     <a routerLink="/create-news" class="navigation-item">Create news</a>
                 </li>
                 <li *ngIf="this.userService.userRole == 'user'" class="header-navigation-item">
-                    <a [routerLink]="['/profile', userId]" class="navigation-item">Become a journalist</a>
+                    <a (click)="journalistHandler(this.userId)" class="navigation-item special">Become a journalist</a>
                 </li>
                 <li class="header-navigation-item">
                     <a routerLink="/recent-news" class="navigation-item">Recent-news</a>
