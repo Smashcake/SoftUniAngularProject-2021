@@ -15,7 +15,8 @@
         <div class="category">
             <label for="category-wrapper">Category</label>
             <select #categoryInput="ngModel" name="category" id="category" class="filter-list" #option ngModel>
-                <option *ngFor="let category of categories">{{category.name}}
+                <option *ngFor="let category of categories">
+                    {{category.name}}
             </select>
         </div>
     </div>

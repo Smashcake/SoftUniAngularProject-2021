@@ -1,0 +1,20 @@
+<div class="messages-wrapper">
+    <div *ngFor="let message of messages">
+        <div [attr.class]="message.read ? 'read-message' : 'unread-message'">
+            <div class="message-wrapper">
+                <h5 class="sender">Sender: {{message.sender}}</h5>
+                <p class="content">{{message.content}}</p>
+                <span class="date">Sent on: {{message.date | localDate}}
+                    {{message.date.toDate().toLocaleTimeString()}}</span>
+            </div>
+            <div class="message-btns">
+                <button class="mark-read">
+                    Mark as Read
+                </button>
+                <button class="delete-btn" (click)="deleteMessage(message.date)">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

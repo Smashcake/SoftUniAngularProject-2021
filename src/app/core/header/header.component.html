@@ -7,6 +7,9 @@
     <article class="header-navigation">
         <ul class="header-navigation-list">
             <div *ngIf="isLogged" class="logged-Nav-Items">
+                <li class="header-navigation-item">
+                    <a [routerLink]="['/messages', this.userId]" class="navigation-item">Messages {{userMessages}}</a>
+                </li>
                 <li *ngIf="this.userService.userRole == 'admin'" class="header-navigation-item">
                     <a [routerLink]="['/review-news']" class="navigation-item">Review news</a>
                 </li>

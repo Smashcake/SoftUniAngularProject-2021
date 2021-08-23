@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-pagination',
   templateUrl: './news-pagination.component.html',
   styleUrls: ['./news-pagination.component.css']
 })
-export class NewsPaginationComponent implements OnInit {
+export class NewsPaginationComponent {
   @Input() itemsPerPage: number;
   @Input() itemsNumber: number;
   @Input() allPagesNumber: number;
@@ -13,9 +13,6 @@ export class NewsPaginationComponent implements OnInit {
   private _currentPage: number = 1;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
   get currentPage(): number {
     return this._currentPage;

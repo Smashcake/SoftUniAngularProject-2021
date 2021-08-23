@@ -1,5 +1,5 @@
-body{
-    font-size:20px;
+body {
+  font-size: 20px;
 }
 
 .validation-error {
@@ -15,7 +15,7 @@ body{
   box-shadow: 0px 0px 10px 3px #00bfb6;
 }
 
-.form-group{
+.form-group {
   margin: 10px;
 }
 
@@ -37,11 +37,11 @@ body{
   cursor: pointer;
 }
 
-.sign-in{
-  margin:20px;
+.sign-in {
+  margin: 20px;
 }
 
-.link{
+.link {
   text-decoration: none;
-  margin-left:10px;
+  margin-left: 10px;
 }

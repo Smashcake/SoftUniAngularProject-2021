@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { INewsArticle } from 'src/app/interfaces/news-article';
-import { NewsService } from '../news.service';
 import { Router } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { UserService } from 'src/app/user/user.service';
 import { NgForm } from '@angular/forms';
+import { AngularFireAuth } from '@angular/fire/auth';
+
+import { UserService } from 'src/app/user/user.service';
+import { NewsService } from '../news.service';
+
+import { INewsArticle } from 'src/app/interfaces/news-article';
 import { IRegisterUser } from 'src/app/interfaces/register-user';
+import { IMessage } from 'src/app/interfaces/message';
 
 @Component({
   selector: 'app-create-news',
@@ -14,11 +17,15 @@ import { IRegisterUser } from 'src/app/interfaces/register-user';
 })
 export class CreateNewsComponent implements OnInit {
 
-  newsCall = 'News';
+  newsCall: string = 'News';
   userId: string;
   categories = [];
 
-  constructor(private newsService: NewsService, private route: Router, private auth: AngularFireAuth, private userService: UserService) {
+  constructor(
+    private newsService: NewsService,
+    private route: Router,
+    private auth: AngularFireAuth,
+    private userService: UserService) {
     this.auth.authState.subscribe(user => {
       this.userId = user?.uid;
     })
@@ -37,13 +44,13 @@ export class CreateNewsComponent implements OnInit {
   createNews(newsData: NgForm) {
     if (newsData.invalid) {
       return "Good attemp at Obscurity,Department of Homeland Security";
-    }
+    };
 
     let formInput = newsData.value;
 
     if (formInput.category == '') {
       formInput.category = 'Business';
-    }
+    };
 
     let news: INewsArticle = {
       title: formInput.title,
@@ -60,11 +67,19 @@ export class CreateNewsComponent implements OnInit {
       approved: false
     }
 
+    let message: IMessage = {
+      sender: 'Automated',
+      date: new Date(),
+      content: 'Successfully added news article for review',
+      read: false
+    }
+
     this.userService.getUserData(this.userId).get().subscribe(userData => {
       news.createdBy.name = userData.data()?.name;
       news.createdBy.surname = userData.data()?.surname;
       this.newsService.createNews(news).then(x => {
         this.userService.addArticleToUser(this.userId, news);
+        this.userService.addMessageToUser(this.userId, message);
       })
       this.route.navigateByUrl("");
     });

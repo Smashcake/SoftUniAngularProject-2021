@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IComment } from 'src/app/interfaces/comment';
-import { IUserReport } from 'src/app/interfaces/user-report';
+
+import { AngularFireAuth } from '@angular/fire/auth';
+
 import { UserService } from 'src/app/user/user.service';
 import { NewsService } from '../news.service';
+
+import { IUserReport } from 'src/app/interfaces/user-report';
+import { IComment } from 'src/app/interfaces/comment';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { IMessage } from 'src/app/interfaces/message';
 
 @Component({
   selector: 'app-news-detail',
@@ -23,7 +27,10 @@ export class NewsDetailComponent {
 
   newsId: string = this.getNewsId();
 
-  constructor(private newsService: NewsService, private route: Router, private auth: AngularFireAuth, private userService: UserService,) {
+  constructor(
+    private newsService: NewsService,
+    private route: Router, private auth: AngularFireAuth,
+    private userService: UserService,) {
     this.getNewsData();
     this.auth.authState.subscribe(user => {
       this.userId = user?.uid ? user.uid : undefined;
@@ -40,17 +47,28 @@ export class NewsDetailComponent {
     });
   }
 
+  private getNewsId() {
+    const index: number = this.route.url.lastIndexOf('/');
+    return this.route.url.substring(index + 1);
+  }
+
+  private redirectTo(uri: string) {
+    this.route.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+      this.route.navigate([uri]));
+  }
+
   getNewsData() {
     return this.newsService.loadNewsData(this.newsId).get().subscribe(news => {
       if (news.data() === undefined) {
         this.route.navigateByUrl('not-found');
-      }
+      };
 
       this.newsDetail = news.data();
       this.newsDetail.id = news.id;
       this.newsDetail.createdOn = this.newsDetail.createdOn;
       let userComments = [];
       userComments = this.newsDetail.comments;
+
       if (!userComments.find(x => x.authorId === this.userId)) {
         this.hasCommented = false;
       }
@@ -58,11 +76,10 @@ export class NewsDetailComponent {
         this.hasCommented = true;
       }
     });
-
   }
 
   deleteNews(id: string) {
-    this.newsService.deleteNews(id, this.userId).then(x => {
+    this.newsService.deleteNews(id, this.userId).then(() => {
       setTimeout(() => this.route.navigateByUrl(''), 200)
     });
   }
@@ -70,7 +87,7 @@ export class NewsDetailComponent {
   commentHandler(commentData: NgForm, articleId: string) {
     if (commentData.invalid) {
       return;
-    }
+    };
 
     let commentInfo: IComment = {
       content: commentData.value.comment,
@@ -82,32 +99,36 @@ export class NewsDetailComponent {
       id: ''
     };
 
+    let message: IMessage = {
+      sender: 'Automated',
+      date: new Date(),
+      content: 'Successfully added comment',
+      read: false
+    }
+
     this.userService.getUserData(this.userId).get().subscribe((user) => {
       commentInfo.authorName = user.data()?.name;
       commentInfo.authorSurname = user.data()?.surname;
 
-      this.newsService.addComment(commentInfo).then(x => {
+      this.newsService.addComment(commentInfo).then(() => {
         this.newsService.addCommentToNewsArticle(articleId, commentInfo);
         this.userService.addCommentToUserComments(this.userId, commentInfo)
-      }).then(y => {
+        this.userService.addMessageToUser(this.userId, message);
+      }).then(() => {
         setTimeout(() => this.redirectTo(`news-detail/${articleId}`), 200);
       });
     });
-
-  }
-
-  private getNewsId() {
-    const index: number = this.route.url.lastIndexOf('/');
-    return this.route.url.substring(index + 1);
-  }
-
-  redirectTo(uri: string) {
-    this.route.navigateByUrl('/', { skipLocationChange: true }).then(() =>
-      this.route.navigate([uri]));
   }
 
   deleteComment(commentId: string, newsArticleId: string, userId: string) {
     this.newsService.deleteComment(commentId, newsArticleId, userId).then(x => {
+      let message: IMessage = {
+        sender: 'Automated',
+        date: new Date(),
+        content: 'Successfully removed comment',
+        read: false
+      }
+      this.userService.addMessageToUser(userId, message);
       setTimeout(() => this.redirectTo(`news-detail/${newsArticleId}`), 200);
     });
   }
@@ -116,15 +137,16 @@ export class NewsDetailComponent {
     if (newsData.invalid) {
       return;
     }
+
     this.userService.editUserArticle(newsData.value, newsId, this.userId);
-    this.newsService.editArticle(newsData.value, newsId).then(x => {
+    this.newsService.editArticle(newsData.value, newsId).then(() => {
       setTimeout(() => this.redirectTo(`news-detail/${newsId}`), 200, 200);
     });
   }
 
   saveComment(content: string, commentId: string, newsArticleId: string, userId: string) {
     this.userService.editUserComment(commentId, userId, content);
-    this.newsService.editArticleComment(newsArticleId, commentId, content).then(x => {
+    this.newsService.editArticleComment(newsArticleId, commentId, content).then(() => {
       setTimeout(() => this.redirectTo(`news-detail/${newsArticleId}`), 200, 200);
     });
   }
@@ -138,28 +160,49 @@ export class NewsDetailComponent {
         userId: '',
         reportDate: new Date()
       };
+
       this.newsService.loadNewsData(newsId).get().subscribe(newsData => {
         newsReports = newsData?.data()?.reports;
+        
         this.userService.getUserData(userId).get().subscribe(userData => {
           userReport.name = userData?.data()?.name;
           userReport.surname = userData?.data()?.surname;
           userReport.userId = userId;
+          let hasUserReported: boolean;
+          hasUserReported = newsReports.find(x => x.userId == userId) ? true : false;
+
+          if (hasUserReported) {
+            return window.alert('You have already reported this news article.');
+          }
+
+          let message: IMessage = {
+            sender: 'Automated',
+            date: new Date(),
+            content: 'Successfully reported news article',
+            read: false
+          }
+
           newsReports.push(userReport);
+          this.userService.addMessageToUser(userId, message);
+          
           this.newsService.loadNewsData(newsId).update({ reports: newsReports })
-          .then(x => {
-            let newsReportsLength: number = 0;
-            this.newsService.loadNewsData(newsId).get().subscribe(news => {
-              newsReportsLength = news?.data()?.reports.length;
-              if (newsReportsLength >= 3) {
-                this.newsService.loadNewsData(newsId).update({ approved: false })
-              };
-            })
-          }).then(y => {
-            setTimeout(() => this.redirectTo(`news-detail/${newsId}`), 200, 200);
-          });
+            .then(() => {
+              let newsReportsLength: number = 0;
+              this.newsService.loadNewsData(newsId).get().subscribe(news => {
+                newsReportsLength = news?.data()?.reports.length;
+
+                if (newsReportsLength > 3) {
+                  this.newsService.loadNewsData(newsId).update({ approved: false })
+                };
+              })
+            }).then(() => {
+              setTimeout(() => this.redirectTo(`news-detail/${newsId}`), 200, 200);
+            });
         });
       });
     };
+
   }
+
 }
 

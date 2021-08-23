@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
+import { IMessage } from 'src/app/interfaces/message';
+
 import { IRegisterUser } from 'src/app/interfaces/register-user';
 import { IReviewNews } from 'src/app/interfaces/review-news';
 import { NewsService } from 'src/app/news/news.service';
@@ -14,12 +17,23 @@ export class ReviewNewsComponent {
 
   newsToReview: IReviewNews[] | undefined;
 
-  constructor(private newsService: NewsService, private userService: UserService, private route: Router) {
+  constructor(
+    private newsService: NewsService,
+    private userService: UserService,
+    private route: Router) {
     this.newsToReview = this.newsToBeReviewed();
+  }
+
+  private bindUserNameAndSurname(document: AngularFirestoreDocument, newsReview: IReviewNews) {
+    document.get().subscribe(userData => {
+      newsReview.createdBy.name = userData.data()?.name;
+      newsReview.createdBy.surname = userData.data()?.surname;
+    });
   }
 
   newsToBeReviewed(): IReviewNews[] {
     let reviewedNews: IReviewNews[] = [];
+
     this.newsService.loadNews().get().subscribe(reviewedNewsCollection => {
       reviewedNewsCollection.docs.map(reviewedNewsData => {
         let newsReviewData: IReviewNews = {
@@ -35,11 +49,9 @@ export class ReviewNewsComponent {
           category: reviewedNewsData?.data()?.category,
           approved: reviewedNewsData?.data()?.approved
         };
+        
+        this.bindUserNameAndSurname((this.userService.getUserData(newsReviewData.createdById)), newsReviewData);
 
-        this.userService.getUserData(newsReviewData.createdById).get().subscribe(userData => {
-          newsReviewData.createdBy.name = userData.data()?.name;
-          newsReviewData.createdBy.surname = userData.data()?.surname;
-        });
         if (newsReviewData.approved == false) {
           reviewedNews.push(newsReviewData);
         }
@@ -50,10 +62,23 @@ export class ReviewNewsComponent {
   }
 
   newsAcceptionHandler(verdict: boolean, newsId: string, creatorId: string) {
+    
+    let message: IMessage = {
+      sender: 'Automated',
+      date: new Date(),
+      content: '',
+      read: false
+    }
+
     if (verdict) {
       this.newsService.loadNewsData(newsId).update({ approved: true });
+      this.newsService.loadNewsData(newsId).update({ reports: []});
+      message.content = 'Your news article has been approved.';
+      this.userService.addMessageToUser(creatorId, message);
     }
     else {
+      message.content = 'Your news article has been deemed inappropriate/harmful and will be removed.';
+      this.userService.addMessageToUser(creatorId, message);
       this.newsService.deleteNews(newsId, creatorId);
     }
     setTimeout(() => this.redirectTo(`review-news`), 200);
@@ -63,4 +88,5 @@ export class ReviewNewsComponent {
     this.route.navigateByUrl('/', { skipLocationChange: true }).then(() =>
       this.route.navigate([uri]));
   }
+
 }

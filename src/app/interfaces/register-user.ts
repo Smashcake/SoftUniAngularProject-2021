@@ -8,4 +8,5 @@ export interface IRegisterUser {
     role: string,
     comments: [],
     newsArticles: [],
+    messages: []
 }

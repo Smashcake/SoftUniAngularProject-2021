@@ -1,10 +1,13 @@
-import { Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { IUserProfile } from 'src/app/interfaces/user-profile';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { NewsService } from 'src/app/news/news.service';
 import { UserService } from '../user.service';
+
+import { IUserProfile } from 'src/app/interfaces/user-profile';
+import { AngularFirestoreDocument } from '@angular/fire/firestore';
+import { IMessage } from 'src/app/interfaces/message';
 
 @Component({
   selector: 'app-profile',
@@ -12,10 +15,6 @@ import { UserService } from '../user.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
-
-  
-  @ViewChild('passwordInput') passwordInput: ElementRef<HTMLInputElement>;
-  @ViewChild('confirmPasswordInput') confirmPasswordInput: ElementRef<HTMLInputElement>;
 
   userProfile: IUserProfile = {
     newsArticles: [],
@@ -28,21 +27,36 @@ export class ProfileComponent {
 
   userId: string;
 
-  constructor(private auth: AngularFireAuth, private userService: UserService, private newsService: NewsService, private route: Router, private renderer: Renderer2) {
+  constructor(
+    private auth: AngularFireAuth,
+    private userService: UserService,
+    private newsService: NewsService,
+    private route: Router) {
     this.auth.authState.subscribe(user => {
       this.userId = user?.uid ? user.uid : undefined;
-      this.userService.getUserData(this.userId).get().subscribe(user => {
-        this.userProfile.newsArticles = user?.data().newsArticles;
-        this.userProfile.comments = user?.data().comments;
-        this.userProfile.name = user?.data().name;
-        this.userProfile.surname = user?.data().surname;
-        this.userProfile.email = user?.data().email;
-      });
+      this.bindUserData(this.userService.getUserData(this.userId));
+    });
+  }
+
+  private bindUserData(document: AngularFirestoreDocument) {
+    document.get().subscribe(user => {
+      this.userProfile.newsArticles = user?.data().newsArticles;
+      this.userProfile.comments = user?.data().comments;
+      this.userProfile.name = user?.data().name;
+      this.userProfile.surname = user?.data().surname;
+      this.userProfile.email = user?.data().email;
     });
   }
 
   deleteComment(id: string, articleId: string) {
     this.newsService.deleteComment(id, articleId, this.userId).then(x => {
+      let message: IMessage = {
+        sender: 'Automated',
+        date: new Date(),
+        content: 'Successfully removed comment.',
+        read: false
+      }
+      this.userService.addMessageToUser(this.userId, message);
       setTimeout(() => this.redirectTo(`profile/${this.userId}`), 200);
     });
   }
@@ -53,33 +67,13 @@ export class ProfileComponent {
   }
 
   saveProfile(name: string, surname: string, email: string, oldEmail: string, userId: string) {
-    if (email !== oldEmail){
+    if (email !== oldEmail) {
       this.userService.updateUserEmail(email);
-      this.userService.getUserData(userId).update({ name: name, surname: surname, email: email});
+      this.userService.getUserData(userId).update({ name: name, surname: surname, email: email });
     }
-    else{
-      this.userService.getUserData(userId).update({ name: name, surname: surname});
+    else {
+      this.userService.getUserData(userId).update({ name: name, surname: surname });
     }
   }
-
-  // togglePasswordVisibility(){
-  //   let element = this.passwordInput.nativeElement;
-  //   if (element.type === 'password'){
-  //     this.renderer.setAttribute(element, 'type' , 'text');
-  //   }
-  //   else {
-  //     this.renderer.setAttribute(element, 'type' , 'password');
-  //   }
-  // }
-
-  // toggleConfirmPasswordVisibility(){
-  //   let element = this.confirmPasswordInput.nativeElement;
-  //   if (element.type === 'password'){
-  //     this.renderer.setAttribute(element, 'type' , 'text');
-  //   }
-  //   else {
-  //     this.renderer.setAttribute(element, 'type' , 'password');
-  //   }
-  // }
 
 }

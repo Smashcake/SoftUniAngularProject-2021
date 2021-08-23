@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { IJournalistApplicant } from 'src/app/interfaces/journalist-applicant';
+import { IMessage } from 'src/app/interfaces/message';
 import { UserService } from 'src/app/user/user.service';
 import { AdminService } from '../admin.service';
 
@@ -13,12 +15,16 @@ export class JournalistApplicationsComponent {
 
   applicants: IJournalistApplicant[] | undefined;
 
-  constructor(private adminService: AdminService, private userService: UserService, private route: Router) {
+  constructor(
+    private adminService: AdminService,
+    private userService: UserService,
+    private route: Router) {
     this.applicants = this.getApplicants();
   }
 
   getApplicants(): IJournalistApplicant[] {
     let journalistApplicants: IJournalistApplicant[] = [];
+
     this.adminService.journalistApplicants().get().subscribe(collection => {
       collection.docs.map(applicantInfo => {
         let applicant: IJournalistApplicant = {
@@ -28,6 +34,7 @@ export class JournalistApplicationsComponent {
           userId: applicantInfo?.data()?.userId,
           docId: applicantInfo?.data()?.docId
         };
+
         journalistApplicants.push(applicant);
       })
     })
@@ -35,15 +42,32 @@ export class JournalistApplicationsComponent {
   }
 
   applicantDecision(verdict: boolean, applicantId: string, docId: string) {
-    if (verdict) {
-      this.userService.getUserData(applicantId).update({ role: 'journalist'});
+
+    let message: IMessage = {
+      sender: 'Automated',
+      date: new Date(),
+      content: '',
+      read: false
     }
+
+    if (verdict) {
+      message.content = 'Your journalist application has been approved.';
+      this.userService.addMessageToUser(applicantId, message);
+      this.userService.getUserData(applicantId).update({ role: 'journalist' });
+    }
+    else { 
+      message.content = 'Your journalist application has been declined.';
+      this.userService.addMessageToUser(applicantId, message);
+    }
+
     let applicantIndex: number = this.applicants.findIndex(x => x.userId == applicantId);
+
     if (applicantIndex > -1) {
       this.applicants.splice(applicantIndex, 1);
     }
-    this.adminService.journalistApplicants().doc(docId).delete().then((x) => {
-      setTimeout(() => this.redirectTo(`journalist-applications`), 200); 
+
+    this.adminService.journalistApplicants().doc(docId).delete().then(() => {
+      setTimeout(() => this.redirectTo(`journalist-applications`), 200);
     });
   }
 

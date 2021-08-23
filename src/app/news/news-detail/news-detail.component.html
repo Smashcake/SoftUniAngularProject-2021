@@ -57,7 +57,8 @@
                 Article</button>
         </div>
     </div>
-    <button *ngIf="userId" class="report-news-btn" (click)="reportNewsHandler(newsDetail.id, userId)">Report <i class="fas fa-flag"></i></button>
+    <button *ngIf="userId" class="report-news-btn" (click)="reportNewsHandler(newsDetail.id, userId)">Report <i
+            class="fas fa-flag"></i></button>
     <form class="comment-form" *ngIf="userId !== undefined && hasCommented === false" #commentForm="ngForm"
         (ngSubmit)="commentHandler(commentForm, newsDetail.id)">
         <div class="form-group">

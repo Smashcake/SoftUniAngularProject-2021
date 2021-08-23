@@ -1,4 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
+
 import { AuthActive } from '../core/auth-guard.guard';
 import { JournalistApplicationsComponent } from './journalist-applications/journalist-applications.component';
 import { ReviewNewsComponent } from './review-news/review-news.component';

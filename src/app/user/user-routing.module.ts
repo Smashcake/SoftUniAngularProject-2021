@@ -1,6 +1,8 @@
 import { Routes, RouterModule } from '@angular/router';
 import { AuthActive } from '../core/auth-guard.guard';
+
 import { LoginComponent } from './login/login.component';
+import { MessagesComponent } from './messages/messages.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
 
@@ -16,6 +18,16 @@ const routes: Routes = [
     {
         path: 'profile/:id',
         component: ProfileComponent,
+        canActivate: [AuthActive],
+        data: {
+            authenticationRequired: true,
+            authenticationFailureRedirectUrl: '/login',
+            authenticationRole: ['user', 'journalist', 'admin']
+        }
+    },
+    {
+        path: 'messages/:id',
+        component: MessagesComponent,
         canActivate: [AuthActive],
         data: {
             authenticationRequired: true,

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+
+import { AngularFireAuth } from '@angular/fire/auth';
 import { IJournalistApplicant } from 'src/app/interfaces/journalist-applicant';
 import { UserService } from 'src/app/user/user.service';
 
@@ -13,17 +14,24 @@ export class HeaderComponent {
 
   isLogged: boolean = false;
   userId: string;
+  userMessages: number;
 
-  constructor(private auth: AngularFireAuth, private userService: UserService, private route: Router) {
+  constructor(
+    private auth: AngularFireAuth,
+    private userService: UserService,
+    private route: Router) {
     this.auth.authState.subscribe(user => {
       this.isLogged = user?.uid ? true : false;
       this.userId = user?.uid ? user.uid : undefined;
+      this.userService.getUserData(user.uid).get().subscribe(userInfo => {
+        this.userMessages = userInfo?.data()?.messages.filter((x) => x.read == false).length;
+      })
     });
   }
 
   logoutHandler() {
     this.userService.logoutUser()
-      .then(x => {
+      .then(() => {
         this.route.navigateByUrl("/login");
       });
   }
@@ -37,6 +45,7 @@ export class HeaderComponent {
         role: '',
         docId: ''
       };
+
       this.userService.getUserData(userId).get().subscribe(userInfo => {
         user.name = userInfo?.data()?.name;
         user.surname = userInfo?.data()?.surname;

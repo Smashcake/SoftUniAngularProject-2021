@@ -31,7 +31,7 @@
 }
 
 .title label,
-.content label{
+.content label {
   font-size: 20px;
   padding-right: 10px;
 }
@@ -51,21 +51,21 @@
   margin-top: 20px;
   background-color: rgb(0, 180, 54);
   color: white;
-  padding:15px 30px;
+  padding: 15px 30px;
   border-radius: 10px;
   cursor: pointer;
 }
 
-.category *{
-  font-size:20px;
+.category * {
+  font-size: 20px;
   padding-right: 10px;
 }
 
-.filter-list{
+.filter-list {
   margin: 0px 10px;
   font-size: 20px;
   border-radius: 10px;
   box-shadow: 0px 0px 5px 1px lightgrey;
   cursor: pointer;
-  padding:5px;
+  padding: 5px;
 }

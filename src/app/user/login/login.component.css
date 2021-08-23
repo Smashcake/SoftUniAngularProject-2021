@@ -37,3 +37,10 @@
   margin: 0 auto;
   cursor: pointer;
 }
+
+.login-error {
+  display: hidden;
+  color: red;
+  text-align: center;
+  margin: 10px;
+}
