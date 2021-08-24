@@ -71,7 +71,8 @@ export class CreateNewsComponent implements OnInit {
       sender: 'Automated',
       date: new Date(),
       content: 'Successfully added news article for review',
-      read: false
+      read: false,
+      id: ''
     }
 
     this.userService.getUserData(this.userId).get().subscribe(userData => {
@@ -79,7 +80,7 @@ export class CreateNewsComponent implements OnInit {
       news.createdBy.surname = userData.data()?.surname;
       this.newsService.createNews(news).then(x => {
         this.userService.addArticleToUser(this.userId, news);
-        this.userService.addMessageToUser(this.userId, message);
+        this.userService.addMessageToUserAndDB(this.userId, message);
       })
       this.route.navigateByUrl("");
     });

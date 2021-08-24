@@ -9,7 +9,6 @@ import { NewsService } from '../news.service';
 
 import { IUserReport } from 'src/app/interfaces/user-report';
 import { IComment } from 'src/app/interfaces/comment';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { IMessage } from 'src/app/interfaces/message';
 
 @Component({
@@ -52,11 +51,6 @@ export class NewsDetailComponent {
     return this.route.url.substring(index + 1);
   }
 
-  private redirectTo(uri: string) {
-    this.route.navigateByUrl('/', { skipLocationChange: true }).then(() =>
-      this.route.navigate([uri]));
-  }
-
   getNewsData() {
     return this.newsService.loadNewsData(this.newsId).get().subscribe(news => {
       if (news.data() === undefined) {
@@ -80,7 +74,7 @@ export class NewsDetailComponent {
 
   deleteNews(id: string) {
     this.newsService.deleteNews(id, this.userId).then(() => {
-      setTimeout(() => this.route.navigateByUrl(''), 200)
+      this.route.navigateByUrl('');
     });
   }
 
@@ -103,7 +97,8 @@ export class NewsDetailComponent {
       sender: 'Automated',
       date: new Date(),
       content: 'Successfully added comment',
-      read: false
+      read: false,
+      id: ''
     }
 
     this.userService.getUserData(this.userId).get().subscribe((user) => {
@@ -113,24 +108,24 @@ export class NewsDetailComponent {
       this.newsService.addComment(commentInfo).then(() => {
         this.newsService.addCommentToNewsArticle(articleId, commentInfo);
         this.userService.addCommentToUserComments(this.userId, commentInfo)
-        this.userService.addMessageToUser(this.userId, message);
+        this.userService.addMessageToUserAndDB(this.userId, message);
       }).then(() => {
-        setTimeout(() => this.redirectTo(`news-detail/${articleId}`), 200);
+        this.newsDetail = this.getNewsData();
       });
     });
   }
 
   deleteComment(commentId: string, newsArticleId: string, userId: string) {
-    this.newsService.deleteComment(commentId, newsArticleId, userId).then(x => {
+    this.newsService.deleteComment(commentId, newsArticleId, userId).then(() => {
       let message: IMessage = {
         sender: 'Automated',
         date: new Date(),
         content: 'Successfully removed comment',
-        read: false
+        read: false,
+        id: ''
       }
-      this.userService.addMessageToUser(userId, message);
-      setTimeout(() => this.redirectTo(`news-detail/${newsArticleId}`), 200);
-    });
+      this.userService.addMessageToUserAndDB(userId, message);
+    }).then(() => this.newsDetail = this.getNewsData());
   }
 
   saveArticle(newsData: NgForm, newsId: string) {
@@ -140,14 +135,14 @@ export class NewsDetailComponent {
 
     this.userService.editUserArticle(newsData.value, newsId, this.userId);
     this.newsService.editArticle(newsData.value, newsId).then(() => {
-      setTimeout(() => this.redirectTo(`news-detail/${newsId}`), 200, 200);
+      this.newsDetail = this.getNewsData();
     });
   }
 
   saveComment(content: string, commentId: string, newsArticleId: string, userId: string) {
     this.userService.editUserComment(commentId, userId, content);
     this.newsService.editArticleComment(newsArticleId, commentId, content).then(() => {
-      setTimeout(() => this.redirectTo(`news-detail/${newsArticleId}`), 200, 200);
+      this.newsDetail = this.getNewsData();
     });
   }
 
@@ -163,7 +158,7 @@ export class NewsDetailComponent {
 
       this.newsService.loadNewsData(newsId).get().subscribe(newsData => {
         newsReports = newsData?.data()?.reports;
-        
+
         this.userService.getUserData(userId).get().subscribe(userData => {
           userReport.name = userData?.data()?.name;
           userReport.surname = userData?.data()?.surname;
@@ -179,12 +174,13 @@ export class NewsDetailComponent {
             sender: 'Automated',
             date: new Date(),
             content: 'Successfully reported news article',
-            read: false
+            read: false,
+            id: ''
           }
 
           newsReports.push(userReport);
-          this.userService.addMessageToUser(userId, message);
-          
+          this.userService.addMessageToUserAndDB(userId, message);
+
           this.newsService.loadNewsData(newsId).update({ reports: newsReports })
             .then(() => {
               let newsReportsLength: number = 0;
@@ -196,7 +192,7 @@ export class NewsDetailComponent {
                 };
               })
             }).then(() => {
-              setTimeout(() => this.redirectTo(`news-detail/${newsId}`), 200, 200);
+              this.newsDetail = this.getNewsData();
             });
         });
       });

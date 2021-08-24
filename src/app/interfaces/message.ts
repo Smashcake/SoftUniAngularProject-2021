@@ -2,5 +2,6 @@ export interface IMessage {
     content: string,
     sender: string,
     date: Date,
-    read: boolean
+    read: boolean,
+    id: string
 }

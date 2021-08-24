@@ -44,14 +44,15 @@ export class RegisterComponent {
       sender: 'Automated',
       date: new Date(),
       content: 'Thank you for registering with us.We hope you enjoy your stay.',
-      read: false
+      read: false,
+      id: ''
     }
 
     this.userService.registerUser(userInput)
       .then(() => {
         this.auth.authState.subscribe(u => {
           this.userService.addUserToDB(u.uid, userInput);
-          this.userService.addMessageToUser(u.uid, message);
+          this.userService.addMessageToUserAndDB(u.uid, message);
         });
       }).catch(err => {
         console.log(err);

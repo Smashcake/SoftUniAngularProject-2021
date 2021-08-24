@@ -8,10 +8,12 @@
                     {{message.date.toDate().toLocaleTimeString()}}</span>
             </div>
             <div class="message-btns">
-                <button class="mark-read">
+                <button *ngIf="message.read" class="unread-btn" (click)="markAsRead(message.id, this.userService.userId, false)">Mark as
+                    UnRead</button>
+                <button *ngIf="!message.read" class="mark-read" (click)="markAsRead(message.id, this.userService.userId, true)">
                     Mark as Read
                 </button>
-                <button class="delete-btn" (click)="deleteMessage(message.date)">
+                <button class="delete-btn" (click)="deleteMessage(message.id)">
                     Delete
                 </button>
             </div>

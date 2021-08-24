@@ -47,17 +47,18 @@ export class JournalistApplicationsComponent {
       sender: 'Automated',
       date: new Date(),
       content: '',
-      read: false
+      read: false,
+      id: ''
     }
 
     if (verdict) {
       message.content = 'Your journalist application has been approved.';
-      this.userService.addMessageToUser(applicantId, message);
+      this.userService.addMessageToUserAndDB(applicantId, message);
       this.userService.getUserData(applicantId).update({ role: 'journalist' });
     }
     else { 
       message.content = 'Your journalist application has been declined.';
-      this.userService.addMessageToUser(applicantId, message);
+      this.userService.addMessageToUserAndDB(applicantId, message);
     }
 
     let applicantIndex: number = this.applicants.findIndex(x => x.userId == applicantId);
@@ -67,7 +68,7 @@ export class JournalistApplicationsComponent {
     }
 
     this.adminService.journalistApplicants().doc(docId).delete().then(() => {
-      setTimeout(() => this.redirectTo(`journalist-applications`), 200);
+      this.getApplicants();
     });
   }
 

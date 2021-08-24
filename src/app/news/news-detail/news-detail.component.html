@@ -13,7 +13,8 @@
             (click)="editMode = true" class="edit-news-btn">Edit</button>
     </div>
     <div *ngIf="editMode">
-        <form #editNewsForm="ngForm" class="form-wrapper" (ngSubmit)="saveArticle(editNewsForm, newsDetail.id)">
+        <form #editNewsForm="ngForm" class="form-wrapper"
+            (ngSubmit)="saveArticle(editNewsForm, newsDetail.id);editMode = false">
             <div class="form-group">
                 <div class="title-wrapper">
                     <div class="title">

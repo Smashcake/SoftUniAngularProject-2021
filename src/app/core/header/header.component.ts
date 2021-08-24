@@ -27,6 +27,9 @@ export class HeaderComponent {
         this.userMessages = userInfo?.data()?.messages.filter((x) => x.read == false).length;
       })
     });
+    this.userService.messageEvent.subscribe(messages => {
+      this.userMessages = messages.filter((x) => x.read == false).length;
+    })
   }
 
   logoutHandler() {

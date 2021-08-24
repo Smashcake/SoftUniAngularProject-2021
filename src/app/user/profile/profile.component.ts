@@ -54,10 +54,11 @@ export class ProfileComponent {
         sender: 'Automated',
         date: new Date(),
         content: 'Successfully removed comment.',
-        read: false
+        read: false,
+        id: ''
       }
-      this.userService.addMessageToUser(this.userId, message);
-      setTimeout(() => this.redirectTo(`profile/${this.userId}`), 200);
+      this.userService.addMessageToUserAndDB(this.userId, message);
+      this.bindUserData(this.userService.getUserData(this.userId));
     });
   }
 
@@ -69,10 +70,16 @@ export class ProfileComponent {
   saveProfile(name: string, surname: string, email: string, oldEmail: string, userId: string) {
     if (email !== oldEmail) {
       this.userService.updateUserEmail(email);
-      this.userService.getUserData(userId).update({ name: name, surname: surname, email: email });
+      this.userService.getUserData(userId).update({ name: name, surname: surname, email: email })
+        .then(() => {
+          this.bindUserData(this.userService.getUserData(this.userId));
+        });
     }
     else {
-      this.userService.getUserData(userId).update({ name: name, surname: surname });
+      this.userService.getUserData(userId).update({ name: name, surname: surname })
+        .then(() => {
+          this.bindUserData(this.userService.getUserData(this.userId));
+        });;
     }
   }
 

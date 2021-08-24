@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -9,18 +9,19 @@ import { IComment } from '../interfaces/comment';
 import { INewsArticle } from '../interfaces/news-article';
 import { IJournalistApplicant } from '../interfaces/journalist-applicant';
 import { IMessage } from '../interfaces/message';
-import { Timestamp } from 'rxjs';
 
 @Injectable()
 export class UserService {
 
   userCall: string = "users";
   journalistApplicantCall: string = "journalistApplicants";
+  messagesCall: string = "messages";
 
   isLogged: boolean;
   userRole: string;
   userId: string;
   journalistApplicants: any[] | undefined;
+  messageEvent: EventEmitter<IMessage[]> = new EventEmitter<IMessage[]>();
 
 
   constructor(
@@ -156,9 +157,10 @@ export class UserService {
           sender: 'Automated',
           date: new Date(),
           content: 'Successful journalist application.',
-          read: false
+          read: false,
+          id: ''
         }
-        this.addMessageToUser(userId, message);
+        this.addMessageToUserAndDB(userId, message);
       }
       else {
         window.alert("You already have an application.");
@@ -167,27 +169,58 @@ export class UserService {
     });
   }
 
-  addMessageToUser(userId: string, message: IMessage) {
+  addMessageToUserAndDB(userId: string, message: IMessage) {
     let messages: IMessage[] = [];
     this.getUserData(userId).get().subscribe(userInfo => {
       messages = userInfo?.data()?.messages;
-      messages.push(message);
-      this.getUserData(userId).update({ messages: messages});
-    })
+      this.firestore.collection(this.messagesCall).add(message).then(docRef => {
+        message.id = docRef.id;
+        messages.push(message);
+        this.messageEvent.emit(messages);
+        this.getUserData(userId).update({ messages: messages });
+      });
+    });
   }
 
-  removeMessageFromUser(userId: string, time: Date) {
+  removeMessageFromUser(userId: string, messageId: string) {
     let messages: IMessage[] = [];
     let messageIndex: number;
     this.getUserData(userId).get().subscribe(userInfo => {
       messages = userInfo?.data()?.messages;
-      messageIndex = messages.findIndex(message => message.date.getSeconds == time.getSeconds);
+      messageIndex = messages.findIndex(message => message.id == messageId);
 
-      // if (messageIndex > -1) {
-      //   messages.splice(messageIndex, 1);
-      // }
-      this.getUserData(userId).update({ messages: messages});
+      if (messageIndex > -1) {
+        messages.splice(messageIndex, 1);
+      }
+
+      this.messageEvent.emit(messages);
+
+      this.getUserData(userId).update({ messages: messages });
+      this.firestore.collection(this.messagesCall).doc(messageId).delete();
     });
+
   }
+
+  markMessage(messageId: string, userId: string, read: boolean) {
+    let messages: IMessage[] = [];
+    let message: IMessage;
+    let messageIndex: number;
+    this.firestore.collection(this.messagesCall).doc(messageId).update({ read: read });
+    this.getUserData(userId).get().subscribe(userInfo => {
+      messages = userInfo?.data()?.messages;
+      messageIndex = messages.findIndex(message => message.id == messageId);
+      message = messages.find(message => message.id == messageId);
+      message.read = read;
+
+      if (messageIndex > -1) {
+        messages.splice(messageIndex, 1);
+      }
+
+      messages.push(message);
+      this.messageEvent.emit(messages);
+      this.getUserData(userId).update({ messages: messages });
+    })
+  }
+
 }
 

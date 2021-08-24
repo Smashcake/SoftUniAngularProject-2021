@@ -49,7 +49,7 @@ export class ReviewNewsComponent {
           category: reviewedNewsData?.data()?.category,
           approved: reviewedNewsData?.data()?.approved
         };
-        
+
         this.bindUserNameAndSurname((this.userService.getUserData(newsReviewData.createdById)), newsReviewData);
 
         if (newsReviewData.approved == false) {
@@ -62,26 +62,27 @@ export class ReviewNewsComponent {
   }
 
   newsAcceptionHandler(verdict: boolean, newsId: string, creatorId: string) {
-    
     let message: IMessage = {
       sender: 'Automated',
       date: new Date(),
       content: '',
-      read: false
+      read: false,
+      id: ''
     }
 
     if (verdict) {
       this.newsService.loadNewsData(newsId).update({ approved: true });
-      this.newsService.loadNewsData(newsId).update({ reports: []});
+      this.newsService.loadNewsData(newsId).update({ reports: [] }).then(() => this.newsToReview = this.newsToBeReviewed());
       message.content = 'Your news article has been approved.';
-      this.userService.addMessageToUser(creatorId, message);
+      this.userService.addMessageToUserAndDB(creatorId, message);
     }
     else {
       message.content = 'Your news article has been deemed inappropriate/harmful and will be removed.';
-      this.userService.addMessageToUser(creatorId, message);
-      this.newsService.deleteNews(newsId, creatorId);
+      this.userService.addMessageToUserAndDB(creatorId, message);
+      this.newsService.deleteNews(newsId, creatorId)
+        .then(() => this.newsToReview = this.newsToBeReviewed());
     }
-    setTimeout(() => this.redirectTo(`review-news`), 200);
+
   }
 
   redirectTo(uri: string) {

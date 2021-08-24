@@ -15,15 +15,12 @@ export class MessagesComponent {
   messages: IMessage[];
 
   constructor(
-    private userService: UserService,
-    private route: Router
+    private userService: UserService
   ) {
+    this.userService.messageEvent.subscribe(messages => {
+      this.messages = messages;
+    })
     this.loadMessages();
-  }
-
-  private redirectTo(uri: string) {
-    this.route.navigateByUrl('/', { skipLocationChange: true }).then(() =>
-      this.route.navigate([uri]));
   }
 
   loadMessages() {
@@ -33,8 +30,12 @@ export class MessagesComponent {
     })
   }
 
-  deleteMessage(time: Date) {
-    this.userService.removeMessageFromUser(this.userService.userId, time);
-    setTimeout(() => this.redirectTo(`messages/${this.userService.userId}`), 200);
+  markAsRead(messageId: string, userId: string, read: boolean) {
+    this.userService.markMessage(messageId, userId, read);   
   }
+
+  deleteMessage(messageId: string) {
+    this.userService.removeMessageFromUser(this.userService.userId, messageId);
+  }
+
 }
