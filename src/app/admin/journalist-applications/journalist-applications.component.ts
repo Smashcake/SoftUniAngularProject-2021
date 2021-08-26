@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { IJournalistApplicant } from 'src/app/interfaces/journalist-applicant';
-import { IMessage } from 'src/app/interfaces/message';
 import { UserService } from 'src/app/user/user.service';
 import { AdminService } from '../admin.service';
+
+import { IJournalistApplicant } from 'src/app/interfaces/journalist-applicant';
+import { IMessage } from 'src/app/interfaces/message';
 
 @Component({
   selector: 'app-journalist-applications',
@@ -56,7 +57,7 @@ export class JournalistApplicationsComponent {
       this.userService.addMessageToUserAndDB(applicantId, message);
       this.userService.getUserData(applicantId).update({ role: 'journalist' });
     }
-    else { 
+    else {
       message.content = 'Your journalist application has been declined.';
       this.userService.addMessageToUserAndDB(applicantId, message);
     }

@@ -31,6 +31,12 @@ export class NewsDetailComponent {
     private route: Router, private auth: AngularFireAuth,
     private userService: UserService,) {
     this.getNewsData();
+    this.newsService.commentsEvent.subscribe(comments => {
+      this.newsDetail.comments = comments;
+    });
+    this.newsService.userCommentEvent.subscribe(hasComment => {
+      this.hasCommented = hasComment;
+    });
     this.auth.authState.subscribe(user => {
       this.userId = user?.uid ? user.uid : undefined;
     });
@@ -107,10 +113,8 @@ export class NewsDetailComponent {
 
       this.newsService.addComment(commentInfo).then(() => {
         this.newsService.addCommentToNewsArticle(articleId, commentInfo);
-        this.userService.addCommentToUserComments(this.userId, commentInfo)
+        this.userService.addCommentToUserComments(this.userId, commentInfo);
         this.userService.addMessageToUserAndDB(this.userId, message);
-      }).then(() => {
-        this.newsDetail = this.getNewsData();
       });
     });
   }
@@ -125,7 +129,7 @@ export class NewsDetailComponent {
         id: ''
       }
       this.userService.addMessageToUserAndDB(userId, message);
-    }).then(() => this.newsDetail = this.getNewsData());
+    });
   }
 
   saveArticle(newsData: NgForm, newsId: string) {
@@ -134,16 +138,12 @@ export class NewsDetailComponent {
     }
 
     this.userService.editUserArticle(newsData.value, newsId, this.userId);
-    this.newsService.editArticle(newsData.value, newsId).then(() => {
-      this.newsDetail = this.getNewsData();
-    });
+    this.newsService.editArticle(newsData.value, newsId);
   }
 
   saveComment(content: string, commentId: string, newsArticleId: string, userId: string) {
     this.userService.editUserComment(commentId, userId, content);
-    this.newsService.editArticleComment(newsArticleId, commentId, content).then(() => {
-      this.newsDetail = this.getNewsData();
-    });
+    this.newsService.editArticleComment(newsArticleId, commentId, content);
   }
 
   reportNewsHandler(newsId: string, userId: string) {

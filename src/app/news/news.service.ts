@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { UserService } from '../user/user.service';
@@ -12,6 +12,9 @@ export class NewsService {
   newsCall: string = "news";
   comments: string = "comments";
   categories: string = "categories";
+  commentsEvent: EventEmitter<IComment[]> = new EventEmitter<IComment[]>();
+  userCommentsEvent: EventEmitter<any[]> = new EventEmitter<any[]>();
+  userCommentEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(
     private firestore: AngularFirestore,
@@ -63,7 +66,11 @@ export class NewsService {
       article = news.data();
       articleComments = article?.comments === undefined ? [] : article?.comments;
       articleComments.push(comment);
-      this.loadNewsData(newsArticleId).update({ comments: articleComments });
+      this.loadNewsData(newsArticleId).update({ comments: articleComments })
+        .then(() => {
+          this.commentsEvent.emit(articleComments);
+          this.userCommentEvent.emit(true);
+        });
     });
   }
 
@@ -94,10 +101,17 @@ export class NewsService {
       if (userCommentIndex > -1) {
         userComments.splice(userCommentIndex, 1);
       }
-      this.userService.getUserData(userId).update({ comments: userComments });
+      this.userService.getUserData(userId).update({ comments: userComments })
+        .then(() => {
+          this.userCommentsEvent.emit(userComments);
+        });
     });
 
-    return this.firestore.collection(this.comments).doc(commentId).delete();
+    return this.firestore.collection(this.comments).doc(commentId).delete()
+      .then(() => {
+        this.commentsEvent.emit(articleComments);
+        this.userCommentEvent.emit(false);
+      });
   }
 
   editArticle(articleData: INewsArticle, id: string) {
@@ -118,7 +132,9 @@ export class NewsService {
       if (articleCommentIndex > -1) {
         comment = articleComments[articleCommentIndex];
         comment.content = newContent;
-        this.loadNewsData(articleId).update({ comments: articleComments });
+        this.loadNewsData(articleId).update({ comments: articleComments }).then(() => {
+          this.commentsEvent.emit(articleComments);
+        });
       };
     });
 

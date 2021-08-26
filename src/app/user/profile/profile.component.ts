@@ -32,10 +32,13 @@ export class ProfileComponent {
     private userService: UserService,
     private newsService: NewsService,
     private route: Router) {
-    this.auth.authState.subscribe(user => {
-      this.userId = user?.uid ? user.uid : undefined;
-      this.bindUserData(this.userService.getUserData(this.userId));
-    });
+    this.newsService.userCommentsEvent.subscribe(comments => {
+      this.userProfile.comments = comments;
+    })
+      this.auth.authState.subscribe(user => {
+        this.userId = user?.uid ? user.uid : undefined;
+        this.bindUserData(this.userService.getUserData(this.userId));
+      });
   }
 
   private bindUserData(document: AngularFirestoreDocument) {
@@ -49,7 +52,7 @@ export class ProfileComponent {
   }
 
   deleteComment(id: string, articleId: string) {
-    this.newsService.deleteComment(id, articleId, this.userId).then(x => {
+    this.newsService.deleteComment(id, articleId, this.userId).then(() => {
       let message: IMessage = {
         sender: 'Automated',
         date: new Date(),

@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AngularFireAuth } from '@angular/fire/auth';
-import { IJournalistApplicant } from 'src/app/interfaces/journalist-applicant';
 import { UserService } from 'src/app/user/user.service';
+
+import { IJournalistApplicant } from 'src/app/interfaces/journalist-applicant';
 
 @Component({
   selector: 'app-header',

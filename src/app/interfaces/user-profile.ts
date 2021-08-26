@@ -3,6 +3,6 @@ export interface IUserProfile {
     surname: string,
     email: string,
     password: string,
-    comments: [],
-    newsArticles: [],
+    comments: any[],
+    newsArticles: any[],
 }

@@ -1,7 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { INewsArticle } from 'src/app/interfaces/news-article';
 
 import { NewsService } from '../news.service';
+
+import { INewsArticle } from 'src/app/interfaces/news-article';
 
 @Component({
   selector: 'app-recent-news',
@@ -57,7 +58,7 @@ export class RecentNewsComponent {
       this.displayedData = this.filteredNews.slice(startItem, endItem);
       return;
     }
-    
+
     this.displayedData = this.news.slice(startItem, endItem);
   }
 

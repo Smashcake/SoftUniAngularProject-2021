@@ -12,6 +12,7 @@
 .header-navigation-list,
 .header-navigation-list div {
   display: flex;
+  align-items: center;
 }
 
 .header-navigation-item {
@@ -28,4 +29,19 @@
 
 .special {
   cursor: pointer;
+}
+
+.fa-bell {
+  background: lightblue;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+.has-messages {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px;
+  position: fixed;
+  top: 20px;
 }

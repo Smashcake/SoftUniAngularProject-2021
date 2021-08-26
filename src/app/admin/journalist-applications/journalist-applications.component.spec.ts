@@ -8,9 +8,9 @@ describe('JournalistApplicationsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ JournalistApplicationsComponent ]
+      declarations: [JournalistApplicationsComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

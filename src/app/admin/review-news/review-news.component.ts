@@ -3,10 +3,11 @@ import { AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { IMessage } from 'src/app/interfaces/message';
 
+import { UserService } from 'src/app/user/user.service';
+import { NewsService } from 'src/app/news/news.service';
+
 import { IRegisterUser } from 'src/app/interfaces/register-user';
 import { IReviewNews } from 'src/app/interfaces/review-news';
-import { NewsService } from 'src/app/news/news.service';
-import { UserService } from 'src/app/user/user.service';
 
 @Component({
   selector: 'app-review-news',
